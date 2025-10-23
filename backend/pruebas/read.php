@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/config/conexion.php';
+require_once __DIR__.'/../config/conexion.php';
 
 try {
     echo "<h2>Localidades</h2>";
