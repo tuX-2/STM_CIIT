@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Trabajo - Corredor Interoceánico del Istmo de Tehuantepec</title>
+    <link rel="stylesheet" href="./css/panel_general.css">
+</head>
+<body>
+    <div class="header">
+        <h1>SISTEMA DE TRANSPORTE MULTIMODAL - CORREDOR INTEROCEÁNICO DEL ISTMO DE TEHUANTEPEC</h1>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-item">
+            <span>Personal</span>
+            <div class="dropdown">
+                <div class="dropdown-item" onclick="showContent('personal-registrar')">Registrar</div>
+                <div class="dropdown-item" onclick="showContent('personal-consultar')">Consultar</div>
+                <div class="dropdown-item" onclick="showContent('personal-actualizar')">Actualizar</div>
+                <div class="dropdown-item" onclick="showContent('personal-eliminar')">Eliminar</div>
+            </div>
+        </div>
+        <div class="nav-item">
+            <span>Usuarios</span>
+            <div class="dropdown">
+                <div class="dropdown-item" onclick="showContent('usuarios-consultar')">Consultar</div>
+                <div class="dropdown-item" onclick="showContent('usuarios-actualizar')">Actualizar</div>
+                <div class="dropdown-item" onclick="showContent('usuarios-eliminar')">Eliminar</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-content">
+        <div class="welcome-section" id="welcome">
+            <h2>PANEL DE ADMINISTRACIÓN</h2>
+            <p>Seleccione una opción del menú superior para comenzar</p>
+        </div>
+
+        <div class="content-area" id="personal-registrar">
+            <h3>Registrar Personal</h3>
+            <p>Módulo para registrar nuevo personal en el sistema de transporte multimodal.</p>
+        </div>
+
+        <div class="content-area" id="personal-consultar">
+            <h3>Consultar Personal</h3>
+            <p>Módulo para consultar información del personal registrado.</p>
+        </div>
+
+        <div class="content-area" id="personal-actualizar">
+            <h3>Actualizar Personal</h3>
+            <p>Módulo para actualizar datos del personal existente.</p>
+        </div>
+
+        <div class="content-area" id="personal-eliminar">
+            <h3>Eliminar Personal</h3>
+            <p>Módulo para eliminar registros de personal del sistema.</p>
+        </div>
+
+        <div class="content-area" id="usuarios-consultar">
+            <h3>Consultar Usuarios</h3>
+            <p>Módulo para consultar información de usuarios del sistema.</p>
+        </div>
+
+        <div class="content-area" id="usuarios-actualizar">
+            <h3>Actualizar Usuarios</h3>
+            <p>Módulo para actualizar datos de usuarios existentes.</p>
+        </div>
+
+        <div class="content-area" id="usuarios-eliminar">
+            <h3>Eliminar Usuarios</h3>
+            <p>Módulo para eliminar usuarios del sistema.</p>
+        </div>
+
+        <div class="grid-container">
+            <div class="card">
+                <h3>Personal</h3>
+                <p>Gestión completa del personal operativo del corredor interoceánico.</p>
+            </div>
+            <div class="card">
+                <h3>Usuarios</h3>
+                <p>Administración de usuarios y permisos del sistema.</p>
+            </div>
+            <div class="card">
+                <h3>Sistema Multimodal</h3>
+                <p>Coordinación de transporte ferroviario, marítimo y terrestre.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showContent(contentId) {
+            // Ocultar welcome y todas las áreas de contenido
+            document.getElementById('welcome').style.display = 'none';
+            const contentAreas = document.querySelectorAll('.content-area');
+            contentAreas.forEach(area => {
+                area.classList.remove('active');
+            });
+            
+            // Mostrar el contenido seleccionado
+            document.getElementById(contentId).classList.add('active');
+        }
+    </script>
+</body>
+</html>
