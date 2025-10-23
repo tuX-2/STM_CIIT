@@ -150,3 +150,29 @@
             margin-bottom: 1.5rem;
             font-weight: 400;
         }
+
+        /* Aseguramos que los enlaces dentro del dropdown se vean como div */
+        .dropdown-item {
+            display: block;
+            padding: 0.75rem 1.5rem;
+            text-decoration: none;
+            /* quita subrayado */
+            color: #000000;
+            /* color inicial */
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 1px solid #e0e0e0;
+            outline: none;
+            /* quita línea azul al click/focus */
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover,
+        .dropdown-item:focus {
+            background: #000000;
+            color: #ffffff;
+            outline: none;
+        }

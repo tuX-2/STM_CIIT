@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Trabajo - Corredor Interoceánico del Istmo de Tehuantepec</title>
     <link rel="stylesheet" href="./css/panel_general.css">
 </head>
+
 <body>
     <div class="header">
         <h1>SISTEMA DE TRANSPORTE MULTIMODAL - CORREDOR INTEROCEÁNICO DEL ISTMO DE TEHUANTEPEC</h1>
@@ -15,8 +17,8 @@
         <div class="nav-item">
             <span>Personal</span>
             <div class="dropdown">
-                <div class="dropdown-item" onclick="showContent('personal-registrar')">Registrar</div>
-                <div class="dropdown-item" onclick="showContent('personal-consultar')">Consultar</div>
+                <a href="registroPersonal.html" class="dropdown-item">Registrar</a>
+                <a href="consultarPersonal.html" class="dropdown-item">Consultar</a>
                 <div class="dropdown-item" onclick="showContent('personal-actualizar')">Actualizar</div>
                 <div class="dropdown-item" onclick="showContent('personal-eliminar')">Eliminar</div>
             </div>
@@ -96,10 +98,11 @@
             contentAreas.forEach(area => {
                 area.classList.remove('active');
             });
-            
+
             // Mostrar el contenido seleccionado
             document.getElementById(contentId).classList.add('active');
         }
     </script>
 </body>
+
 </html>
