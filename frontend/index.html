@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Mi App</title>
+</head>
+<body>
+    <h1>Frontend (HTML + JS)</h1>
+    <button onclick="test()">Probar conexión PHP</button>
+
+    <script>
+        function test() {
+            fetch('/backend/index.php')
+                .then(res => res.text())
+                .then(data => alert(data))
+                .catch(err => alert('Error: ' + err));
+        }
+    </script>
+</body>
+</html>
