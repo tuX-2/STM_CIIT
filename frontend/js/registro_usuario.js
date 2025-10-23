@@ -136,11 +136,12 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
         messageBox.style.display = "block";
         messageBox.innerText = (text === "Usuario registrado exitosamente.") ? text + " Por favor vuelva a iniciar sesión como usuario." : text;
 
-        // Regresar a la vista de Login
-        setTimeout(function () {
+        // Regresar a la vista de Login si se hizo correctamente el registro del usuario.
+        if (text === "Usuario registrado exitosamente.") {
+            setTimeout(function () {
             window.location.href = "/../index.html";
         }, 2000);
-
+        }
 
     } catch (error) {
         console.error("Error:", error);

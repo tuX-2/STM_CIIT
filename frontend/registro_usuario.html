@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Registro de Usuario - Corredor Interoceánico</title>
-    <link rel="stylesheet" href="./css/registro_usuarios.css">
+    <link rel="stylesheet" href="./css/registro_usuarios.css" />
 </head>
 
 <body>
@@ -48,7 +48,17 @@
                     <div class="error-message" id="confirmPasswordError"></div>
                 </div>
 
-                <button type="submit" class="btn-register">Registrar Usuario</button>
+                <div class="footer-buttons">
+                    <button type="submit" class="btn-register"
+                        title="Haz clic aquí para guardar tu cuenta nueva después de llenar todos los campos requeridos.">
+                        Registrar Usuario
+                    </button>
+                    <button type="button" class="btn-cancel"
+                        title="Haz clic aquí para regresar sin guardar los cambios."
+                        onclick="window.location.href='index.html';">
+                        Cancelar
+                    </button>
+                </div>
 
                 <div class="footer-links">
                     <a href="index.html">¿Ya tienes cuenta? Iniciar sesión</a>
@@ -56,7 +66,6 @@
             </form>
         </div>
     </div>
-
 
     <script src="./js/registro_usuario.js"></script>
 </body>
