@@ -4,13 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="./css/style.css">
+    <link rel="stylesheet" href="./css/login_usuarios.css">
 </head>
 <body>
     <div class="container">
         <div class="login-box">
             <h1>Iniciar sesión</h1>
             <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="nombre_usuario" required>
+                    <label for="nombre_usuario">Nombre de usuario</label>
+                </div>
                 <div class="input-group">
                     <input type="email" id="email" required>
                     <label for="email">Email</label>
@@ -19,7 +23,10 @@
                     <input type="password" id="password" required>
                     <label for="password">Contraseña</label>
                 </div>
-                <button type="submit" class="btn-login">Entrar</button>
+<button type="submit" class="btn-login">
+    <span class="btn-text">Entrar</span>
+    <div class="spinner"></div>
+</button>
             </form>
             <div class="footer-links">
                 <a href="#">¿Olvidaste tu contraseña?</a>
@@ -28,6 +35,6 @@
         </div>
     </div>
 
-    <script src="./js/script.js"></script>
+    <script src="./js/login_usuarios.js"></script>
 </body>
 </html>
