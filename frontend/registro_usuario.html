@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro de Usuario - Corredor Interoceánico</title>
+    <link rel="stylesheet" href="./css/registro_usuarios.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="register-box">
+            <h1>Registro de Usuario</h1>
+
+            <div class="success-message" id="successMessage">
+                Usuario registrado exitosamente
+            </div>
+
+            <form id="registerForm" novalidate>
+                <div class="input-group">
+                    <input type="text" id="username" required />
+                    <label for="username">Nombre de Usuario</label>
+                    <div class="error-message" id="usernameError"></div>
+                </div>
+
+                <div class="input-group">
+                    <input type="email" id="email" required />
+                    <label for="email">Correo Electrónico</label>
+                    <div class="error-message" id="emailError"></div>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" id="personalId" required />
+                    <label for="personalId">Clave de Identificación de Personal</label>
+                    <div class="error-message" id="personalIdError"></div>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="password" required />
+                    <label for="password">Contraseña</label>
+                    <div class="error-message" id="passwordError"></div>
+                </div>
+
+                <div class="input-group">
+                    <input type="password" id="confirmPassword" required />
+                    <label for="confirmPassword">Confirmar Contraseña</label>
+                    <div class="error-message" id="confirmPasswordError"></div>
+                </div>
+
+                <button type="submit" class="btn-register">Registrar Usuario</button>
+
+                <div class="footer-links">
+                    <a href="index.html">¿Ya tienes cuenta? Iniciar sesión</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+
+    <script src="./js/registro_usuario.js"></script>
+</body>
+
+</html>
