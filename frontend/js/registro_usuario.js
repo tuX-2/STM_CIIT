@@ -134,7 +134,13 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
         messageBox.style.backgroundColor = (text === "Usuario registrado exitosamente.") ? "#4caf50" : "#f32b2bff";
         // Mostrar mensaje en pantalla
         messageBox.style.display = "block";
-        messageBox.innerText = text;
+        messageBox.innerText = (text === "Usuario registrado exitosamente.") ? text + " Por favor vuelva a iniciar sesión como usuario." : text;
+
+        // Regresar a la vista de Login
+        setTimeout(function () {
+            window.location.href = "/../index.html";
+        }, 2000);
+
 
     } catch (error) {
         console.error("Error:", error);

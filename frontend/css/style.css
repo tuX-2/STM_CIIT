@@ -60,8 +60,8 @@ h1 {
     border-bottom-color: #1a1a1a;
 }
 
-.input-group input:focus + label,
-.input-group input:valid + label {
+.input-group input:focus+label,
+.input-group input:valid+label {
     top: -18px;
     font-size: 12px;
     color: #666;
@@ -101,7 +101,8 @@ h1 {
 }
 
 .footer-links {
-    text-align: center;
+    display: flex;
+    justify-content: space-between;
     margin-top: 25px;
 }
 

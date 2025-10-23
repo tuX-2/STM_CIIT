@@ -47,13 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt = $pdo->prepare($sql);
         $stmt->execute([
             'nombre' => $nombre,
-            'password' => password_hash($password, PASSWORD_BCRYPT), 
+            'password' => password_hash($password, PASSWORD_BCRYPT),
             'correo' => $correo,
             'clave' => $clave_personal
-            
+
         ]);
 
         echo "Usuario registrado exitosamente.";
+
     } catch (PDOException $e) {
         echo "Error al registrar: " . $e->getMessage();
     }
