@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de personal</title>
+    <link rel="stylesheet" href="./css/panel_general.css">
+    <link rel="stylesheet" href="./css/gestionPersonal.css">
+
+</head>
+
+<body>
+    <header class="header">
+        <h1>Gestión de Personal</h1>
+    </header>
+
+    <main class="main-content">
+
+        <!-- REGISTRO DEL PERSONAL-->
+        <section class="welcome-section">
+            <h2>Registro de Personal</h2>
+            <form action="registroPersonal.php" method="POST" class="grid-container">
+
+                <!-- Nombre-->
+                <div class="form-field">
+                    <label for="nombre_persona">Nombre(s)</label>
+                    <input type="text" id="nombre_persona" name="nombre_persona" required pattern="[A-Za-z\s]+"
+                        title="Solo letras y espacios">
+                </div>
+
+                <!-- Apellido Paterno-->
+                <div class="form-field">
+                    <label for="apellido_paterno">Apellido Paterno</label>
+                    <input type="text" id="apellido_paterno" name="apellido_paterno" required pattern="[A-Za-z]+"
+                        title="Solo letras">
+                </div>
+
+                <!-- ApellidoMaterno-->
+                <div class="form-field">
+                    <label for="apellido_materno">Apellido Materno</label>
+                    <input type="text" id="apellido_materno" name="apellido_materno" pattern="[A-Za-z]+"
+                        title="Solo letras">
+                </div>
+
+                <div class="form-field">
+                    <label for="afiliacion_laboral">Afiliación Laboral</label>
+                    <select id="afiliacion_laboral" name="afiliacion_laboral" required>
+                        <option value="">Seleccione una localidad</option>
+                        <option value="1">Localidad 1</option>
+                        <option value="2">Localidad 2</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="cargo">Cargo</label>
+                    <select id="cargo" name="cargo" required>
+                        <option value="">Seleccione un cargo</option>
+                        <option value="Autoridad">Autoridad</option>
+                        <option value="Administrador del TMS">Administrador del TMS</option>
+                        <option value="Operador Logístico">Operador Logístico</option>
+                        <option value="Cliente">Cliente</option>
+                        <option value="Jefe de Almacén">Jefe de Almacén</option>
+                    </select>
+                </div>
+
+                <div class="form-field">
+                    <label for="curp">CURP</label>
+                    <input type="text" id="curp" name="curp" required maxlength="18"
+                        pattern="([A-Z][AEIOUX][A-Z]{2}\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])[HM](AS|B[CS]|C[CLMSH]|D[FG]|G[TR]|HG|JC|M[CNS]|N[ETL]|OC|PL|Q[TR]|S[PLR]|T[CSL]|VZ|YN|ZS)[B-DF-HJ-NP-TV-Z]{3}[A-Z\d])(\d)"
+                        title="CURP válido de 18 caracteres">
+                </div>
+
+                <div class="form-actions" style="grid-column: 1 / -1; justify-content: center;">
+                    <button type="submit">Guardar</button>
+                    <button type="reset">Cancelar</button>
+                </div>
+
+
+            </form>
+
+
+        </section>
+    </main>
+
+
+</body>
+
+</html>

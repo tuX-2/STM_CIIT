@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de personal</title>
+    <link rel="stylesheet" href="./css/panel_general.css">
+    <link rel="stylesheet" href="./css/gestionPersonal.css">
+</head>
+
+<body>
+    <header class="header">
+        <h1>Gestión de Personal</h1>
+    </header>
+
+    <main class="main-content">
+        <section class="welcome-section">
+            <h2>Consulta de Personal</h2>
+            <form action="consultar_personal.php" method="POST" class="grid-container">
+
+                <div class="form-field">
+                    <label for="numero_personal">Número de Personal</label>
+                    <input type="text" id="numero_personal" name="numero_personal" required
+                        placeholder="Número único asignado al personal">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Consultar</button>
+                    <button type="reset">Limpiar</button>
+                    <button type="button" onclick="window.location.href='index.php'">Cancelar</button>
+                </div>
+
+            </form>
+
+            <div class="content-area active" id="resultado-consulta">
+                <h3>Resultados de la Consulta</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>Afiliación Laboral</th>
+                            <th>Cargo</th>
+                            <th>CURP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Juan</td>
+                            <td>Pérez</td>
+                            <td>Gómez</td>
+                            <td>Localidad 1</td>
+                            <td>Operador Logístico</td>
+                            <td>JUAP880101HDFXXX01</td>
+                        </tr>
+                        <!-- Puedes agregar más filas aquí según los resultados -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>
