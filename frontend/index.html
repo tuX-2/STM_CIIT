@@ -1,20 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Mi App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
 </head>
 <body>
-    <h1>Frontend (HTML + JS)</h1>
-    <button onclick="test()">Probar conexión PHP</button>
+    <h1>Iniciar Sesión</h1>
+    
+    <form id="loginForm">
+        <div>
+            <label for="usuario">Usuario:</label><br>
+            <input type="text" id="usuario" name="usuario" required>
+        </div>
+        <br>
+        <div>
+            <label for="password">Contraseña:</label><br>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <br>
+        <button type="submit">Ingresar</button>
+    </form>
+    
+    <p id="mensaje"></p>
 
-    <script>
-        function test() {
-            fetch('/backend/index.php')
-                .then(res => res.text())
-                .then(data => alert(data))
-                .catch(err => alert('Error: ' + err));
-        }
-    </script>
 </body>
 </html>
