@@ -10,11 +10,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Configurar eventos
 function configurarEventos() {
-    const idUsuarioInput = document.getElementById('id_usuario');
+    const curpUsuarioInput = document.getElementById('curp_usuario');
     const form = document.getElementById('updateForm');
     
+    // Convertir a mayúsculas automáticamente
+    curpUsuarioInput.addEventListener('input', function(e) {
+        e.target.value = e.target.value.toUpperCase();
+    });
+    
     // Buscar al presionar Enter
-    idUsuarioInput.addEventListener('keypress', function(e) {
+    curpUsuarioInput.addEventListener('keypress', function(e) {
         if (e.key === 'Enter') {
             e.preventDefault();
             buscarUsuario();
@@ -46,7 +51,7 @@ function cargarPersonal() {
                 
                 console.log('✅ Personal cargado:', data.data.length, 'registros');
             } else {
-                mostrarAlerta('Id inexistente')
+                mostrarAlerta('error', 'Error al cargar personal: ' + data.message);
             }
         })
         .catch(error => {
@@ -55,19 +60,25 @@ function cargarPersonal() {
         });
 }
 
-// Buscar usuario por ID
+// Buscar usuario por CURP
 function buscarUsuario() {
-    const idUsuario = document.getElementById('id_usuario').value.trim();
+    const curpUsuario = document.getElementById('curp_usuario').value.trim().toUpperCase();
     
-    if (idUsuario === '' || idUsuario < 1) {
-        mostrarAlerta('error', 'Por favor ingrese un ID de usuario válido');
+    if (curpUsuario === '') {
+        mostrarAlerta('error', 'Por favor ingrese un CURP');
+        return;
+    }
+    
+    // Validar formato básico de CURP (18 caracteres)
+    if (curpUsuario.length !== 18) {
+        mostrarAlerta('error', 'El CURP debe tener exactamente 18 caracteres');
         return;
     }
     
     // Mostrar indicador de carga
     mostrarCargando(true);
     
-    fetch(URL_BASE + '?accion=obtenerUsuario&id_usuario=' + encodeURIComponent(idUsuario))
+    fetch(URL_BASE + '?accion=obtenerUsuario&curp=' + encodeURIComponent(curpUsuario))
         .then(response => response.json())
         .then(data => {
             mostrarCargando(false);
@@ -93,6 +104,7 @@ function llenarFormulario(usuario) {
     // Mostrar información en el info-box
     document.getElementById('info_id').textContent = usuario.id_usuario;
     document.getElementById('info_nombre_usuario').textContent = usuario.nombre_usuario;
+    document.getElementById('info_curp').textContent = usuario.curp || 'No disponible';
     
     // Mostrar nombre completo del personal asociado
     if (usuario.nombre_personal) {
@@ -210,8 +222,8 @@ function ocultarFormulario() {
 
 // Limpiar búsqueda
 function limpiarBusqueda() {
-    document.getElementById('id_usuario').value = '';
-    document.getElementById('id_usuario').focus();
+    document.getElementById('curp_usuario').value = '';
+    document.getElementById('curp_usuario').focus();
 }
 
 // Mostrar/ocultar indicador de carga

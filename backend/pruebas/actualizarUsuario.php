@@ -1,5 +1,5 @@
 <?php
-// RF-GU-03: Actualización de Usuarios
+// RF-GU-03: Actualización de Usuarios (Búsqueda por CURP)
 // Configuración de errores para JSON
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -67,13 +67,18 @@ try {
 }
 
 // ============================================
-// FUNCIÓN: Obtener datos de usuario por ID
+// FUNCIÓN: Obtener datos de usuario por CURP
 // ============================================
 function obtenerUsuario($pdo) {
-    $idUsuario = isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : 0;
+    $curp = isset($_GET['curp']) ? strtoupper(trim($_GET['curp'])) : '';
     
-    if ($idUsuario <= 0) {
-        sendJsonResponse(false, 'ID de usuario no válido');
+    if (empty($curp)) {
+        sendJsonResponse(false, 'CURP no proporcionado');
+    }
+    
+    // Validar longitud del CURP
+    if (strlen($curp) !== 18) {
+        sendJsonResponse(false, 'El CURP debe tener exactamente 18 caracteres');
     }
     
     try {
@@ -84,13 +89,14 @@ function obtenerUsuario($pdo) {
                     u.identificador_de_rh, 
                     p.nombre_personal, 
                     p.apellido_paterno, 
-                    p.apellido_materno
+                    p.apellido_materno,
+                    p.curp
                   FROM usuarios u
-                  LEFT JOIN personal p ON u.identificador_de_rh = p.id_personal
-                  WHERE u.id_usuario = :id_usuario";
+                  INNER JOIN personal p ON u.identificador_de_rh = p.id_personal
+                  WHERE UPPER(p.curp) = :curp";
         
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
+        $stmt->bindParam(':curp', $curp, PDO::PARAM_STR);
         $stmt->execute();
         
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -98,7 +104,7 @@ function obtenerUsuario($pdo) {
         if ($usuario) {
             sendJsonResponse(true, 'Usuario encontrado', $usuario);
         } else {
-            sendJsonResponse(false, 'Usuario no encontrado con ID: ' . $idUsuario);
+            sendJsonResponse(false, 'No se encontró ningún usuario asociado al CURP: ' . $curp);
         }
     } catch (PDOException $e) {
         error_log('Error en obtenerUsuario: ' . $e->getMessage());
