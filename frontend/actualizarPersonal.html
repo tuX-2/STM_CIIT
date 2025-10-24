@@ -13,11 +13,18 @@
 
     <main class="main-content">
         <form action="#" method="post" class="update-form" id="updateForm">
+            <!-- Campo oculto para almacenar el ID del personal -->
+            <input type="hidden" id="id_personal" name="id_personal" value="">
+            
             <div class="form-left">
-                <label for="curp">CURP: <span style="color: red;">*</span></label><br>
-                <input type="text" id="curp" name="curp" maxlength="18" value="" 
+                <label for="curp_busqueda">CURP (Búsqueda): <span style="color: red;">*</span></label><br>
+                <input type="text" id="curp_busqueda" maxlength="18" value="" 
                        placeholder="Ingrese CURP y presione Enter" required><br>
                 <small style="color: #666;">Presione Enter o Tab para buscar</small><br><br>
+
+                <label for="curp">CURP (Editable): <span style="color: red;">*</span></label><br>
+                <input type="text" id="curp" name="curp" maxlength="18" value="" 
+                       placeholder="CURP del personal" required><br><br>
 
                 <label for="nombre_personal">Nombre: <span style="color: red;">*</span></label><br>
                 <input type="text" id="nombre_personal" name="nombre_personal" value="" required><br><br>
