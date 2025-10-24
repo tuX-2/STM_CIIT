@@ -46,7 +46,7 @@ function cargarPersonal() {
                 
                 console.log('✅ Personal cargado:', data.data.length, 'registros');
             } else {
-                mostrarAlerta('error', data.message);
+                mostrarAlerta('Id inexistente')
             }
         })
         .catch(error => {
