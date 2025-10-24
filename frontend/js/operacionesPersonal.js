@@ -132,4 +132,84 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
+
+
+
+
+
+
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const formRegistrar = document.getElementById('formRegistrarPersonal');
+
+    if (!formRegistrar) return;
+
+    formRegistrar.addEventListener('submit', e => {
+        e.preventDefault();
+
+        const curp = formRegistrar.curp.value.trim();
+        if (curp.length !== 18) {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'error',
+                title: 'CURP debe tener 18 caracteres.',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true
+            });
+            return;
+        }
+
+        fetch('/backend/registroPersonal.php', {
+            method: 'POST',
+            body: new FormData(formRegistrar)
+        })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'success',
+                        title: data.message,
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                    formRegistrar.reset();
+                } else {
+                    Swal.fire({
+                        toast: true,
+                        position: 'top-end',
+                        icon: 'error',
+                        title: data.error || 'Error al registrar',
+                        showConfirmButton: false,
+                        timer: 3000,
+                        timerProgressBar: true
+                    });
+                }
+            })
+            .catch(() => {
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'error',
+                    title: 'Error al conectar con el servidor',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true
+                });
+            });
+    });
+
+    // Botón cancelar
+    const btnCancelar = document.getElementById('btnCancelar');
+    if (btnCancelar) {
+        btnCancelar.addEventListener('click', () => {
+            formRegistrar.reset();
+        });
+    }
 });

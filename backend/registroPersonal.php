@@ -14,6 +14,25 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $curp = $_POST["curp"] ?? '';
 
     try {
+        
+        //Primero verificar que no exista ninguna curp igual
+
+        // Verificar si ya existe la CURP
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM personal WHERE curp = :curp");
+        $stmt->execute([':curp' => $curp]);
+        $existe = $stmt->fetchColumn();
+
+        if ($existe > 0) {
+            // La CURP ya está registrada
+            http_response_code(400);
+            echo json_encode([
+                "success" => false,
+                "error" => "La CURP ya se encuentra registrada."
+            ]);
+            exit; // detener la ejecución para no insertar
+        }
+
+
         // Preparar statement
         $stmt = $pdo->prepare("
             INSERT INTO personal (nombre_personal, apellido_paterno, apellido_materno, afiliacion_laboral, cargo, curp)
