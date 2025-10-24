@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Usuario</title>
+    <link rel="stylesheet" href="css/actualizar_usuarios.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Actualizar Registro de Usuario</h1>
+    </header>
+
+    <main class="main-content">
+        <form action="#" method="post" class="update-form" id="updateForm">
+            <div class="form-left">
+                <label for="nombre_usuario">Nombre de Usuario: <span style="color: red;">*</span></label><br>
+                <input type="text" id="nombre_usuario" name="nombre_usuario" maxlength="100" value=""
+                        placeholder="Ingrese nombre de usuario y presione Enter" required><br>
+                <small style="color: #666;">Presione Enter o Tab para buscar</small><br><br>
+
+                <label for="correo_electronico">Correo Electrónico: <span style="color: red;">*</span></label><br>
+                <input type="email" id="correo_electronico" name="correo_electronico" maxlength="150" value="" required><br><br>
+
+                <label for="identificador_de_rh">Personal Asociado: <span style="color: red;">*</span></label><br>
+                <select id="identificador_de_rh" name="identificador_de_rh" required>
+                    <option value="">Seleccione una persona</option>
+                </select><br><br>
+            </div>
+
+            <div class="form-right">
+                <label for="contrasena">Nueva Contraseña:</label><br>
+                <input type="password" id="contrasena" name="contrasena" maxlength="100" 
+                       placeholder="Dejar en blanco para mantener la actual"><br>
+                <small style="color: #666;">Solo completar si desea cambiar la contraseña</small><br><br>
+
+                <label for="contrasena_confirmar">Confirmar Nueva Contraseña:</label><br>
+                <input type="password" id="contrasena_confirmar" name="contrasena_confirmar" maxlength="100"
+                       placeholder="Confirme la nueva contraseña"><br><br>
+
+                <div class="info-personal" id="infoPersonal" style="background: #f0f0f0; padding: 15px; border-radius: 5px; display: none;">
+                    <h3 style="margin-top: 0;">Información del Personal Asociado</h3>
+                    <p><strong>Nombre:</strong> <span id="info_nombre">-</span></p>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit">Actualizar</button>
+                <button type="reset">Limpiar</button>
+                <button type="button" onclick="history.back()">Cancelar</button>
+            </div>
+        </form>
+    </main>
+
+    <script src="./js/actualizarEliminarUsuarios.js"></script>
+</body>
+</html>
