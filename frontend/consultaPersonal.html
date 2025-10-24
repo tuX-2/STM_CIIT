@@ -17,18 +17,19 @@
     <main class="main-content">
         <section class="welcome-section">
             <h2>Consulta de Personal</h2>
-            <form action="consultar_personal.php" method="POST" class="grid-container">
+            <form action="/backend/consultaPersonal.php" method="POST" class="grid-container">
 
                 <div class="form-field">
-                    <label for="numero_personal">Número de Personal</label>
-                    <input type="text" id="numero_personal" name="numero_personal" required
-                        placeholder="Número único asignado al personal">
+                    <label for="curp_personal">CURP del Personal</label>
+                    <input type="text" style="text-transform: uppercase;"
+                        oninput="this.value = this.value.toUpperCase()" id="curp_personal" name="curp_personal" required
+                        placeholder="CURP del personal">
                 </div>
 
                 <div class="form-actions">
                     <button type="submit">Consultar</button>
                     <button type="reset">Limpiar</button>
-                    <button type="button" onclick="window.location.href='index.php'">Cancelar</button>
+                    <button type="button">Cancelar</button>
                 </div>
 
             </form>
@@ -46,21 +47,15 @@
                             <th>CURP</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>Juan</td>
-                            <td>Pérez</td>
-                            <td>Gómez</td>
-                            <td>Localidad 1</td>
-                            <td>Operador Logístico</td>
-                            <td>JUAP880101HDFXXX01</td>
-                        </tr>
-                        <!-- Puedes agregar más filas aquí según los resultados -->
+                    <tbody id="tabla-resultados">
+                        
                     </tbody>
                 </table>
             </div>
         </section>
     </main>
+    <script src="../js/operacionesPersonal.js"></script>
+
 </body>
 
 </html>
