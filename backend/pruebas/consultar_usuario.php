@@ -5,15 +5,11 @@ ini_set('display_errors', 1);
 require_once __DIR__ . '/../config/conexion.php';
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $clave = trim($_POST['clave_usuario'] ?? '');
+try {
+    // Si hay una clave enviada
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['clave_usuario'])) {
+        $clave = trim($_POST['clave_usuario']);
 
-    if (empty($clave)) {
-        echo json_encode(['success' => false, 'message' => 'Debe ingresar una clave de usuario.']);
-        exit;
-    }
-
-    try {
         // Buscar datos en la tabla personal
         $sql_personal = "SELECT id_personal, nombre_personal, apellido_paterno, apellido_materno 
                          FROM personal 
@@ -31,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $id_personal = $personal['id_personal'];
         $nombre_completo = trim($personal['nombre_personal'] . ' ' . $personal['apellido_paterno'] . ' ' . $personal['apellido_materno']);
 
-        // Buscar datos del usuario en la tabla usuarios
+        // Buscar datos del usuario
         $sql_usuario = "SELECT nombre_usuario, correo_electronico 
                         FROM usuarios 
                         WHERE identificador_de_rh = :id_personal";
@@ -45,16 +41,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit;
         }
 
-        // Combinar los resultados
         $resultado = [
             'nombre_usuario' => $usuario['nombre_usuario'],
-            'correo' => $usuario['correo'],
+            'correo' => $usuario['correo_electronico'],
             'nombre_completo' => $nombre_completo,
             'clave_identificacion' => $clave
         ];
 
         echo json_encode(['success' => true, 'data' => [$resultado]]);
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Error en la consulta: ' . $e->getMessage()]);
+    } 
+    // Si no hay clave → devolver todos los usuarios
+    else {
+        $sql = "SELECT 
+                    u.nombre_usuario,
+                    u.correo_electronico AS correo,
+                    CONCAT(p.nombre_personal, ' ', p.apellido_paterno, ' ', p.apellido_materno) AS nombre_completo,
+                    p.curp AS clave_identificacion
+                FROM usuarios u
+                JOIN personal p ON u.identificador_de_rh = p.id_personal
+                ORDER BY p.nombre_personal";
+
+        $stmt = $pdo->query($sql);
+        $usuarios = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        echo json_encode(['success' => true, 'data' => $usuarios]);
     }
+} catch (PDOException $e) {
+    echo json_encode(['success' => false, 'message' => 'Error en la consulta: ' . $e->getMessage()]);
 }
