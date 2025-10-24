@@ -1,30 +1,22 @@
 // Variables globales
-let personalCargado = false;
+let usuarioActual = null;
+const URL_BASE = '../backend/pruebas/actualizarUsuario.php';
 
-// Cargar personal al iniciar la página
+// Inicializar al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
     cargarPersonal();
     configurarEventos();
 });
 
-// Configurar eventos del formulario
+// Configurar eventos
 function configurarEventos() {
-    const nombreUsuarioInput = document.getElementById('nombre_usuario');
+    const idUsuarioInput = document.getElementById('id_usuario');
     const form = document.getElementById('updateForm');
-    const contrasenaInput = document.getElementById('contrasena');
-    const contrasenaConfirmarInput = document.getElementById('contrasena_confirmar');
     
-    // Buscar usuario al presionar Enter o Tab
-    nombreUsuarioInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.key === 'Tab') {
+    // Buscar al presionar Enter
+    idUsuarioInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
             e.preventDefault();
-            buscarUsuario();
-        }
-    });
-    
-    // También buscar al perder el foco
-    nombreUsuarioInput.addEventListener('blur', function() {
-        if (this.value.trim() !== '') {
             buscarUsuario();
         }
     });
@@ -32,46 +24,14 @@ function configurarEventos() {
     // Manejar envío del formulario
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
-        // Validar contraseñas si se proporcionaron
-        const contrasena = contrasenaInput.value;
-        const contrasenaConfirmar = contrasenaConfirmarInput.value;
-        
-        if (contrasena !== '' || contrasenaConfirmar !== '') {
-            if (contrasena !== contrasenaConfirmar) {
-                alert('Las contraseñas no coinciden');
-                return;
-            }
-            
-            if (contrasena.length < 6) {
-                alert('La contraseña debe tener al menos 6 caracteres');
-                return;
-            }
-        }
-        
-        actualizarUsuario();
-    });
-    
-    // Limpiar formulario
-    form.addEventListener('reset', function() {
-        document.getElementById('infoPersonal').style.display = 'none';
-        nombreUsuarioInput.focus();
+        validarYActualizar();
     });
 }
 
 // Cargar lista de personal
 function cargarPersonal() {
-    // AJUSTA LA RUTA SEGÚN TU ESTRUCTURA DE ARCHIVOS
-    // Si tu HTML está en frontend/ y el PHP en backend/pruebas/:
-    const urlPHP = '../backend/pruebas/actualizarUsuario.php?accion=obtenerPersonal';
-    
-    fetch(urlPHP)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error HTTP: ' + response.status);
-            }
-            return response.json();
-        })
+    fetch(URL_BASE + '?accion=obtenerPersonal')
+        .then(response => response.json())
         .then(data => {
             if (data.success) {
                 const select = document.getElementById('identificador_de_rh');
@@ -84,143 +44,211 @@ function cargarPersonal() {
                     select.appendChild(option);
                 });
                 
-                personalCargado = true;
-                console.log('Personal cargado correctamente:', data.data.length + ' registros');
+                console.log('✅ Personal cargado:', data.data.length, 'registros');
             } else {
-                console.error('Error al cargar personal:', data.message);
-                alert('Error al cargar la lista de personal: ' + data.message);
+                mostrarAlerta('error', data.message);
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            alert('Error de conexión al cargar el personal: ' + error.message);
+            console.error('Error al cargar personal:', error);
+            mostrarAlerta('error', 'Error de conexión al cargar el personal');
         });
 }
 
-// Buscar usuario por nombre de usuario
+// Buscar usuario por ID
 function buscarUsuario() {
-    const nombreUsuario = document.getElementById('nombre_usuario').value.trim();
+    const idUsuario = document.getElementById('id_usuario').value.trim();
     
-    if (nombreUsuario === '') {
-        alert('Por favor ingrese un nombre de usuario');
+    if (idUsuario === '' || idUsuario < 1) {
+        mostrarAlerta('error', 'Por favor ingrese un ID de usuario válido');
         return;
     }
     
     // Mostrar indicador de carga
-    const form = document.getElementById('updateForm');
-    form.style.opacity = '0.6';
-    form.style.pointerEvents = 'none';
+    mostrarCargando(true);
     
-    // AJUSTA LA RUTA SEGÚN TU ESTRUCTURA
-    const urlPHP = '../backend/pruebas/actualizarUsuario.php?accion=obtenerUsuario&nombre_usuario=' + 
-                   encodeURIComponent(nombreUsuario);
-    
-    fetch(urlPHP)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Error HTTP: ' + response.status);
-            }
-            return response.json();
-        })
+    fetch(URL_BASE + '?accion=obtenerUsuario&id_usuario=' + encodeURIComponent(idUsuario))
+        .then(response => response.json())
         .then(data => {
-            form.style.opacity = '1';
-            form.style.pointerEvents = 'auto';
+            mostrarCargando(false);
             
             if (data.success) {
+                usuarioActual = data.data;
                 llenarFormulario(data.data);
+                mostrarAlerta('success', 'Usuario encontrado correctamente');
             } else {
-                alert(data.message);
-                limpiarCampos();
+                ocultarFormulario();
+                mostrarAlerta('error', data.message);
             }
         })
         .catch(error => {
-            form.style.opacity = '1';
-            form.style.pointerEvents = 'auto';
+            mostrarCargando(false);
             console.error('Error:', error);
-            alert('Error de conexión al buscar el usuario: ' + error.message);
+            mostrarAlerta('error', 'Error de conexión al buscar el usuario');
         });
 }
 
 // Llenar formulario con datos del usuario
 function llenarFormulario(usuario) {
+    // Mostrar información en el info-box
+    document.getElementById('info_id').textContent = usuario.id_usuario;
+    document.getElementById('info_nombre_usuario').textContent = usuario.nombre_usuario;
+    
+    // Mostrar nombre completo del personal asociado
+    if (usuario.nombre_personal) {
+        const nombreCompleto = [
+            usuario.nombre_personal,
+            usuario.apellido_paterno,
+            usuario.apellido_materno
+        ].filter(Boolean).join(' ');
+        document.getElementById('info_personal').textContent = nombreCompleto;
+    } else {
+        document.getElementById('info_personal').textContent = 'Sin personal asociado';
+    }
+    
+    // Llenar campos editables
     document.getElementById('correo_electronico').value = usuario.correo_electronico || '';
     document.getElementById('identificador_de_rh').value = usuario.identificador_de_rh || '';
-    
-    // Mostrar información del personal asociado
-    if (usuario.nombre_personal) {
-        const nombreCompleto = (usuario.nombre_personal + ' ' + 
-                               usuario.apellido_paterno + ' ' + 
-                               (usuario.apellido_materno || '')).trim();
-        document.getElementById('info_nombre').textContent = nombreCompleto;
-        document.getElementById('infoPersonal').style.display = 'block';
-    } else {
-        document.getElementById('infoPersonal').style.display = 'none';
-    }
     
     // Limpiar campos de contraseña
     document.getElementById('contrasena').value = '';
     document.getElementById('contrasena_confirmar').value = '';
     
-    // Enfocar en el siguiente campo
+    // Mostrar formulario
+    document.getElementById('formSection').classList.add('active');
+    
+    // Enfocar en el primer campo editable
     document.getElementById('correo_electronico').focus();
 }
 
-// Limpiar campos del formulario (excepto nombre de usuario)
-function limpiarCampos() {
-    document.getElementById('correo_electronico').value = '';
-    document.getElementById('identificador_de_rh').value = '';
-    document.getElementById('contrasena').value = '';
-    document.getElementById('contrasena_confirmar').value = '';
-    document.getElementById('infoPersonal').style.display = 'none';
+// Validar y actualizar usuario
+function validarYActualizar() {
+    const contrasena = document.getElementById('contrasena').value;
+    const contrasenaConfirmar = document.getElementById('contrasena_confirmar').value;
+    
+    // Validar contraseñas si se proporcionaron
+    if (contrasena !== '' || contrasenaConfirmar !== '') {
+        if (contrasena !== contrasenaConfirmar) {
+            mostrarAlerta('error', 'Las contraseñas no coinciden');
+            return;
+        }
+        
+        if (contrasena.length < 6) {
+            mostrarAlerta('error', 'La contraseña debe tener al menos 6 caracteres');
+            return;
+        }
+    }
+    
+    actualizarUsuario();
 }
 
 // Actualizar usuario
 function actualizarUsuario() {
-    const form = document.getElementById('updateForm');
-    const formData = new FormData(form);
+    const formData = new FormData();
     formData.append('accion', 'actualizarUsuario');
+    formData.append('id_usuario', usuarioActual.id_usuario);
+    formData.append('correo_electronico', document.getElementById('correo_electronico').value);
+    formData.append('identificador_de_rh', document.getElementById('identificador_de_rh').value);
     
-    // Si la contraseña está vacía, no enviarla
-    if (document.getElementById('contrasena').value === '') {
-        formData.delete('contrasena');
+    // Solo enviar contraseña si se proporcionó
+    const contrasena = document.getElementById('contrasena').value;
+    if (contrasena !== '') {
+        formData.append('contrasena', contrasena);
     }
     
-    // Remover el campo de confirmación (no se guarda en BD)
-    formData.delete('contrasena_confirmar');
-    
     // Mostrar indicador de carga
-    form.style.opacity = '0.6';
-    form.style.pointerEvents = 'none';
+    mostrarCargando(true);
     
-    // AJUSTA LA RUTA SEGÚN TU ESTRUCTURA
-    const urlPHP = '../backend/pruebas/actualizarUsuario.php';
-    
-    fetch(urlPHP, {
+    fetch(URL_BASE, {
         method: 'POST',
         body: formData
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error HTTP: ' + response.status);
-        }
-        return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
-        form.style.opacity = '1';
-        form.style.pointerEvents = 'auto';
+        mostrarCargando(false);
         
         if (data.success) {
-            alert(data.message);
+            mostrarAlerta('success', data.message);
             // Recargar los datos del usuario
-            buscarUsuario();
+            setTimeout(() => {
+                buscarUsuario();
+            }, 1500);
         } else {
-            alert('Error: ' + data.message);
+            mostrarAlerta('error', data.message);
         }
     })
     .catch(error => {
-        form.style.opacity = '1';
-        form.style.pointerEvents = 'auto';
+        mostrarCargando(false);
         console.error('Error:', error);
-        alert('Error de conexión al actualizar el usuario: ' + error.message);
+        mostrarAlerta('error', 'Error de conexión al actualizar el usuario');
     });
+}
+
+// Cancelar y limpiar
+function cancelar() {
+    if (confirm('¿Está seguro de cancelar? Se perderán los cambios no guardados.')) {
+        ocultarFormulario();
+        limpiarBusqueda();
+        mostrarAlerta('info', 'Operación cancelada');
+    }
+}
+
+// Limpiar formulario
+function limpiarFormulario() {
+    document.getElementById('correo_electronico').value = '';
+    document.getElementById('identificador_de_rh').value = '';
+    document.getElementById('contrasena').value = '';
+    document.getElementById('contrasena_confirmar').value = '';
+    document.getElementById('correo_electronico').focus();
+}
+
+// Ocultar formulario
+function ocultarFormulario() {
+    document.getElementById('formSection').classList.remove('active');
+    usuarioActual = null;
+}
+
+// Limpiar búsqueda
+function limpiarBusqueda() {
+    document.getElementById('id_usuario').value = '';
+    document.getElementById('id_usuario').focus();
+}
+
+// Mostrar/ocultar indicador de carga
+function mostrarCargando(estado) {
+    const searchSection = document.querySelector('.search-section');
+    const formSection = document.getElementById('formSection');
+    
+    if (estado) {
+        searchSection.classList.add('loading');
+        formSection.classList.add('loading');
+    } else {
+        searchSection.classList.remove('loading');
+        formSection.classList.remove('loading');
+    }
+}
+
+// Mostrar alerta
+function mostrarAlerta(tipo, mensaje) {
+    const alertDiv = document.getElementById('alertMessage');
+    
+    // Limpiar clases anteriores
+    alertDiv.className = 'alert';
+    
+    // Agregar clase según tipo
+    if (tipo === 'success') {
+        alertDiv.classList.add('alert-success');
+    } else if (tipo === 'error') {
+        alertDiv.classList.add('alert-error');
+    } else if (tipo === 'info') {
+        alertDiv.classList.add('alert-info');
+    }
+    
+    alertDiv.textContent = mensaje;
+    alertDiv.classList.add('show');
+    
+    // Ocultar después de 5 segundos
+    setTimeout(() => {
+        alertDiv.classList.remove('show');
+    }, 5000);
 }

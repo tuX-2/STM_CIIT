@@ -1,4 +1,5 @@
 <?php
+// RF-GU-03: Actualización de Usuarios
 // Configuración de errores para JSON
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
@@ -17,15 +18,11 @@ function sendJsonResponse($success, $message, $data = null) {
     exit;
 }
 
-// Incluir archivo de conexión - AJUSTA LA RUTA SEGÚN TU ESTRUCTURA
-// Opción 1: Si el archivo está en backend/pruebas/
+// Incluir archivo de conexión
 $rutaConexion = '../config/conexion.php';
 
-// Opción 2: Si necesitas ruta absoluta
-// $rutaConexion = __DIR__ . '/../config/conexion.php';
-
 if (!file_exists($rutaConexion)) {
-    sendJsonResponse(false, 'Archivo de conexión no encontrado en: ' . $rutaConexion);
+    sendJsonResponse(false, 'Archivo de conexión no encontrado');
 }
 
 require_once $rutaConexion;
@@ -38,7 +35,7 @@ if (!isset($pdo)) {
 // Configurar PDO para excepciones
 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Determinar acción (compatible con PHP 5.x)
+// Determinar acción
 $accion = '';
 if (isset($_GET['accion'])) {
     $accion = $_GET['accion'];
@@ -61,7 +58,7 @@ try {
             break;
         
         default:
-            sendJsonResponse(false, 'Acción no válida: ' . htmlspecialchars($accion));
+            sendJsonResponse(false, 'Acción no válida');
             break;
     }
 } catch (Exception $e) {
@@ -70,13 +67,13 @@ try {
 }
 
 // ============================================
-// FUNCIÓN: Obtener datos de usuario por nombre de usuario
+// FUNCIÓN: Obtener datos de usuario por ID
 // ============================================
 function obtenerUsuario($pdo) {
-    $nombreUsuario = isset($_GET['nombre_usuario']) ? trim($_GET['nombre_usuario']) : '';
+    $idUsuario = isset($_GET['id_usuario']) ? intval($_GET['id_usuario']) : 0;
     
-    if (empty($nombreUsuario)) {
-        sendJsonResponse(false, 'Nombre de usuario no proporcionado');
+    if ($idUsuario <= 0) {
+        sendJsonResponse(false, 'ID de usuario no válido');
     }
     
     try {
@@ -90,10 +87,10 @@ function obtenerUsuario($pdo) {
                     p.apellido_materno
                   FROM usuarios u
                   LEFT JOIN personal p ON u.identificador_de_rh = p.id_personal
-                  WHERE u.nombre_usuario = :nombre_usuario";
+                  WHERE u.id_usuario = :id_usuario";
         
         $stmt = $pdo->prepare($query);
-        $stmt->bindParam(':nombre_usuario', $nombreUsuario, PDO::PARAM_STR);
+        $stmt->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
         $stmt->execute();
         
         $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -101,7 +98,7 @@ function obtenerUsuario($pdo) {
         if ($usuario) {
             sendJsonResponse(true, 'Usuario encontrado', $usuario);
         } else {
-            sendJsonResponse(false, 'Usuario no encontrado: ' . htmlspecialchars($nombreUsuario));
+            sendJsonResponse(false, 'Usuario no encontrado con ID: ' . $idUsuario);
         }
     } catch (PDOException $e) {
         error_log('Error en obtenerUsuario: ' . $e->getMessage());
@@ -114,29 +111,31 @@ function obtenerUsuario($pdo) {
 // ============================================
 function obtenerPersonal($pdo) {
     try {
+        // Verificar si hay datos
+        $countQuery = "SELECT COUNT(*) as total FROM personal";
+        $countStmt = $pdo->query($countQuery);
+        $count = $countStmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($count['total'] == 0) {
+            sendJsonResponse(false, 'No hay personal registrado. Registre personal primero.');
+        }
+        
+        // Obtener personal
         $query = "SELECT 
                     id_personal, 
-                    CONCAT(
-                        nombre_personal, ' ', 
+                    CONCAT_WS(' ',
+                        nombre_personal, 
                         apellido_paterno, 
-                        CASE WHEN apellido_materno IS NOT NULL AND apellido_materno != '' 
-                             THEN CONCAT(' ', apellido_materno) 
-                             ELSE '' 
-                        END
+                        NULLIF(apellido_materno, '')
                     ) as nombre_completo
                   FROM personal 
                   ORDER BY nombre_personal, apellido_paterno";
         
-        $stmt = $pdo->prepare($query);
-        $stmt->execute();
-        
+        $stmt = $pdo->query($query);
         $personal = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        if (empty($personal)) {
-            sendJsonResponse(false, 'No hay personal registrado en el sistema');
-        }
-        
         sendJsonResponse(true, 'Personal obtenido correctamente', $personal);
+        
     } catch (PDOException $e) {
         error_log('Error en obtenerPersonal: ' . $e->getMessage());
         sendJsonResponse(false, 'Error al consultar personal: ' . $e->getMessage());
@@ -147,26 +146,26 @@ function obtenerPersonal($pdo) {
 // FUNCIÓN: Actualizar datos del usuario
 // ============================================
 function actualizarUsuario($pdo) {
-    // Obtener y limpiar datos del POST (compatible con PHP 5.x)
-    $nombreUsuario = isset($_POST['nombre_usuario']) ? trim($_POST['nombre_usuario']) : '';
+    // Obtener datos del POST
+    $idUsuario = isset($_POST['id_usuario']) ? intval($_POST['id_usuario']) : 0;
     $correoElectronico = isset($_POST['correo_electronico']) ? trim($_POST['correo_electronico']) : '';
-    $identificadorRh = isset($_POST['identificador_de_rh']) ? trim($_POST['identificador_de_rh']) : '';
+    $identificadorRh = isset($_POST['identificador_de_rh']) ? intval($_POST['identificador_de_rh']) : 0;
     $contrasena = isset($_POST['contrasena']) ? $_POST['contrasena'] : '';
     
     // Validar datos requeridos
-    if (empty($nombreUsuario)) {
-        sendJsonResponse(false, 'El nombre de usuario es obligatorio');
+    if ($idUsuario <= 0) {
+        sendJsonResponse(false, 'ID de usuario no válido');
     }
     
     if (empty($correoElectronico)) {
         sendJsonResponse(false, 'El correo electrónico es obligatorio');
     }
     
-    if (empty($identificadorRh)) {
+    if ($identificadorRh <= 0) {
         sendJsonResponse(false, 'Debe seleccionar un personal asociado');
     }
     
-    // Validar formato de correo electrónico
+    // Validar formato de correo
     if (!filter_var($correoElectronico, FILTER_VALIDATE_EMAIL)) {
         sendJsonResponse(false, 'El correo electrónico no tiene un formato válido');
     }
@@ -181,9 +180,9 @@ function actualizarUsuario($pdo) {
         $pdo->beginTransaction();
         
         // Verificar que el usuario existe
-        $checkQuery = "SELECT id_usuario FROM usuarios WHERE nombre_usuario = :nombre_usuario";
+        $checkQuery = "SELECT id_usuario FROM usuarios WHERE id_usuario = :id_usuario";
         $checkStmt = $pdo->prepare($checkQuery);
-        $checkStmt->bindParam(':nombre_usuario', $nombreUsuario, PDO::PARAM_STR);
+        $checkStmt->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
         $checkStmt->execute();
         
         if ($checkStmt->rowCount() == 0) {
@@ -205,10 +204,10 @@ function actualizarUsuario($pdo) {
         // Verificar si el correo ya está en uso por otro usuario
         $checkEmailQuery = "SELECT id_usuario FROM usuarios 
                            WHERE correo_electronico = :correo 
-                           AND nombre_usuario != :nombre_usuario";
+                           AND id_usuario != :id_usuario";
         $checkEmailStmt = $pdo->prepare($checkEmailQuery);
         $checkEmailStmt->bindParam(':correo', $correoElectronico, PDO::PARAM_STR);
-        $checkEmailStmt->bindParam(':nombre_usuario', $nombreUsuario, PDO::PARAM_STR);
+        $checkEmailStmt->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
         $checkEmailStmt->execute();
         
         if ($checkEmailStmt->rowCount() > 0) {
@@ -218,27 +217,30 @@ function actualizarUsuario($pdo) {
         
         // Preparar query de actualización
         if (!empty($contrasena)) {
+            // Hashear la contraseña antes de guardarla
+            $contrasenaHash = password_hash($contrasena, PASSWORD_DEFAULT);
+            
             $updateQuery = "UPDATE usuarios 
                            SET correo_electronico = :correo, 
                                identificador_de_rh = :identificador,
                                contrasena = :contrasena
-                           WHERE nombre_usuario = :nombre_usuario";
+                           WHERE id_usuario = :id_usuario";
+            
+            $stmt = $pdo->prepare($updateQuery);
+            $stmt->bindParam(':correo', $correoElectronico, PDO::PARAM_STR);
+            $stmt->bindParam(':identificador', $identificadorRh, PDO::PARAM_INT);
+            $stmt->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
+            $stmt->bindParam(':contrasena', $contrasenaHash, PDO::PARAM_STR);
         } else {
             $updateQuery = "UPDATE usuarios 
                            SET correo_electronico = :correo, 
                                identificador_de_rh = :identificador
-                           WHERE nombre_usuario = :nombre_usuario";
-        }
-        
-        $stmt = $pdo->prepare($updateQuery);
-        $stmt->bindParam(':correo', $correoElectronico, PDO::PARAM_STR);
-        $stmt->bindParam(':identificador', $identificadorRh, PDO::PARAM_INT);
-        $stmt->bindParam(':nombre_usuario', $nombreUsuario, PDO::PARAM_STR);
-        
-        if (!empty($contrasena)) {
-            // Hashear la contraseña antes de guardarla
-            $contrasenaHash = password_hash($contrasena, PASSWORD_DEFAULT);
-            $stmt->bindParam(':contrasena', $contrasenaHash, PDO::PARAM_STR);
+                           WHERE id_usuario = :id_usuario";
+            
+            $stmt = $pdo->prepare($updateQuery);
+            $stmt->bindParam(':correo', $correoElectronico, PDO::PARAM_STR);
+            $stmt->bindParam(':identificador', $identificadorRh, PDO::PARAM_INT);
+            $stmt->bindParam(':id_usuario', $idUsuario, PDO::PARAM_INT);
         }
         
         $stmt->execute();
