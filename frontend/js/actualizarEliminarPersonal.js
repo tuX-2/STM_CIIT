@@ -1,15 +1,15 @@
 document.addEventListener('DOMContentLoaded', function() {
+    const curpBusquedaInput = document.getElementById('curp_busqueda');
     const curpInput = document.getElementById('curp');
+    const idPersonalInput = document.getElementById('id_personal');
     const formulario = document.getElementById('updateForm');
     const afiliacionSelect = document.getElementById('afiliacion_laboral');
-    
-    let curpOriginal = ''; // Para almacenar la CURP original
     
     // Cargar localidades al iniciar
     cargarLocalidades();
     
-    // Evento cuando se presiona Enter o Tab en el campo CURP
-    curpInput.addEventListener('keydown', function(e) {
+    // Evento cuando se presiona Enter o Tab en el campo CURP de búsqueda
+    curpBusquedaInput.addEventListener('keydown', function(e) {
         if (e.key === 'Enter' || e.key === 'Tab') {
             e.preventDefault();
             buscarPersonal();
@@ -17,8 +17,8 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
     // También buscar cuando pierde el foco
-    curpInput.addEventListener('blur', function() {
-        if (this.value.trim() !== '' && this.value !== curpOriginal) {
+    curpBusquedaInput.addEventListener('blur', function() {
+        if (this.value.trim() !== '') {
             buscarPersonal();
         }
     });
@@ -29,10 +29,8 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Limpiar opciones existentes excepto la primera
-                    afiliacionSelect.innerHTML = '<option value="">Seleccione una opcion</option>';
+                    afiliacionSelect.innerHTML = '<option value="">Seleccione una opción</option>';
                     
-                    // Agregar localidades
                     data.data.forEach(localidad => {
                         const option = document.createElement('option');
                         option.value = localidad.id_localidad;
@@ -51,23 +49,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Función para buscar personal por CURP
     function buscarPersonal() {
-        const curp = curpInput.value.trim().toUpperCase();
+        const curpBusqueda = curpBusquedaInput.value.trim().toUpperCase();
         
-        if (curp.length !== 18) {
+        if (curpBusqueda.length !== 18) {
             alert('La CURP debe tener 18 caracteres');
             return;
         }
         
-        // Mostrar indicador de carga
-        curpInput.disabled = true;
+        curpBusquedaInput.disabled = true;
         
-        fetch(`../backend/actualizarEliminarPersonal.php?accion=obtenerPersonal&curp=${encodeURIComponent(curp)}`)
+        fetch(`../backend/actualizarEliminarPersonal.php?accion=obtenerPersonal&curp=${encodeURIComponent(curpBusqueda)}`)
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    // Llenar formulario con datos
                     llenarFormulario(data.data);
-                    curpOriginal = curp;
                 } else {
                     alert(data.message || 'Personal no encontrado');
                     limpiarFormulario();
@@ -78,12 +73,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 alert('Error al buscar el personal');
             })
             .finally(() => {
-                curpInput.disabled = false;
+                curpBusquedaInput.disabled = false;
             });
     }
     
     // Función para llenar el formulario
     function llenarFormulario(datos) {
+        // Guardar el ID del personal (clave para actualizar)
+        idPersonalInput.value = datos.id_personal || '';
+        
+        // Llenar todos los campos, incluyendo CURP editable
+        curpInput.value = datos.curp || '';
         document.getElementById('nombre_personal').value = datos.nombre_personal || '';
         document.getElementById('apellido_paterno').value = datos.apellido_paterno || '';
         document.getElementById('apellido_materno').value = datos.apellido_materno || '';
@@ -96,19 +96,20 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Función para limpiar formulario
     function limpiarFormulario() {
+        idPersonalInput.value = '';
+        curpInput.value = '';
         document.getElementById('nombre_personal').value = '';
         document.getElementById('apellido_paterno').value = '';
         document.getElementById('apellido_materno').value = '';
         document.getElementById('afiliacion_laboral').value = '';
         document.getElementById('cargo').value = '';
-        curpOriginal = '';
         
         habilitarCampos(false);
     }
     
     // Función para habilitar/deshabilitar campos
     function habilitarCampos(habilitar) {
-        const campos = ['nombre_personal', 'apellido_paterno', 'apellido_materno', 
+        const campos = ['curp', 'nombre_personal', 'apellido_paterno', 'apellido_materno', 
                        'afiliacion_laboral', 'cargo'];
         
         campos.forEach(campo => {
@@ -121,8 +122,14 @@ document.addEventListener('DOMContentLoaded', function() {
         e.preventDefault();
         
         // Validar que se haya cargado un personal
-        if (!curpOriginal) {
+        if (!idPersonalInput.value) {
             alert('Debe buscar un personal válido antes de actualizar');
+            return;
+        }
+        
+        // Validar que la CURP nueva tenga 18 caracteres
+        if (curpInput.value.trim().length !== 18) {
+            alert('La CURP debe tener 18 caracteres');
             return;
         }
         
@@ -144,7 +151,8 @@ document.addEventListener('DOMContentLoaded', function() {
         .then(data => {
             if (data.success) {
                 alert('Datos actualizados correctamente');
-                // Opcional: limpiar formulario o recargar datos
+                // Actualizar el campo de búsqueda con la nueva CURP
+                curpBusquedaInput.value = curpInput.value;
             } else {
                 alert('Error al actualizar: ' + data.message);
             }
@@ -158,13 +166,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Manejar botón de limpiar
     formulario.addEventListener('reset', function() {
         limpiarFormulario();
-        curpInput.value = '';
+        curpBusquedaInput.value = '';
     });
     
     // Inicializar formulario deshabilitado
     habilitarCampos(false);
     
-    // Convertir CURP a mayúsculas automáticamente
+    // Convertir CURPs a mayúsculas automáticamente
+    curpBusquedaInput.addEventListener('input', function() {
+        this.value = this.value.toUpperCase();
+    });
+    
     curpInput.addEventListener('input', function() {
         this.value = this.value.toUpperCase();
     });

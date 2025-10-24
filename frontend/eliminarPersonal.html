@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Personal</title>
+    <link rel="stylesheet" href="./css/gestionPersonal.css">
+    <link rel="stylesheet" href="./css/eliminarPersonal.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Eliminar Registro de Personal</h1>
+    </header>
+
+    <main class="main-content">
+        <!-- Sección de búsqueda -->
+        <div class="search-section">
+            <label for="curp_busqueda">CURP: <span style="color: red;">*</span></label><br>
+            <input type="text" id="curp_busqueda" maxlength="18" value="" 
+                   placeholder="Ingrese CURP y presione Enter"><br>
+            <small style="color: #666;">Presione Enter o Tab para buscar el registro</small>
+        </div>
+
+        <!-- Sección de información del personal (oculta inicialmente) -->
+        <div id="info-section" class="hidden">
+            <!-- Campo oculto para almacenar el ID -->
+            <input type="hidden" id="id_personal" value="">
+            
+            <div class="warning-box">
+                <strong>⚠️ ADVERTENCIA</strong>
+                <p>Está a punto de eliminar este registro de forma permanente. Esta acción NO se puede deshacer.</p>
+            </div>
+
+            <div class="info-display">
+                <h3>Información del Personal</h3>
+                
+                <div class="info-row">
+                    <span class="info-label">CURP:</span>
+                    <span class="info-value" id="display_curp">-</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Nombre Completo:</span>
+                    <span class="info-value" id="display_nombre">-</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Apellido Paterno:</span>
+                    <span class="info-value" id="display_paterno">-</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Apellido Materno:</span>
+                    <span class="info-value" id="display_materno">-</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Afiliación Laboral:</span>
+                    <span class="info-value" id="display_afiliacion">-</span>
+                </div>
+                
+                <div class="info-row">
+                    <span class="info-label">Cargo:</span>
+                    <span class="info-value" id="display_cargo">-</span>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-delete" id="btnEliminar">Eliminar Registro</button>
+                <button type="button" class="btn-cancel" onclick="history.back()">Cancelar</button>
+            </div>
+        </div>
+    </main>
+
+    <script src="./js/eliminarPersonal.js"></script>
+</body>
+</html>

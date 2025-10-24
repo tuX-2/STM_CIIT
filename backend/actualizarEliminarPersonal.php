@@ -99,6 +99,7 @@ function obtenerLocalidades($pdo) {
 // ============================================
 function actualizarPersonal($pdo) {
     // Obtener datos del POST
+    $id_personal = $_POST['id_personal'] ?? '';
     $curp = $_POST['curp'] ?? '';
     $nombre_personal = $_POST['nombre_personal'] ?? '';
     $apellido_paterno = $_POST['apellido_paterno'] ?? '';
@@ -107,17 +108,17 @@ function actualizarPersonal($pdo) {
     $cargo = $_POST['cargo'] ?? '';
     
     // Validar datos requeridos
-    if (empty($curp) || empty($nombre_personal) || empty($apellido_paterno) || 
-        empty($afiliacion_laboral) || empty($cargo)) {
+    if (empty($id_personal) || empty($curp) || empty($nombre_personal) || 
+        empty($apellido_paterno) || empty($afiliacion_laboral) || empty($cargo)) {
         echo json_encode(['success' => false, 'message' => 'Todos los campos obligatorios deben estar completos']);
         return;
     }
     
     try {
-        // Verificar que el personal existe
-        $checkQuery = "SELECT id_personal FROM personal WHERE curp = :curp";
+        // Verificar que el personal existe por ID
+        $checkQuery = "SELECT id_personal FROM personal WHERE id_personal = :id";
         $checkStmt = $pdo->prepare($checkQuery);
-        $checkStmt->bindParam(':curp', $curp, PDO::PARAM_STR);
+        $checkStmt->bindParam(':id', $id_personal, PDO::PARAM_INT);
         $checkStmt->execute();
         
         if ($checkStmt->rowCount() == 0) {
@@ -125,22 +126,36 @@ function actualizarPersonal($pdo) {
             return;
         }
         
-        // Actualizar datos
+        // Verificar que la nueva CURP no exista en otro registro
+        $curpCheckQuery = "SELECT id_personal FROM personal WHERE curp = :curp AND id_personal != :id";
+        $curpCheckStmt = $pdo->prepare($curpCheckQuery);
+        $curpCheckStmt->bindParam(':curp', $curp, PDO::PARAM_STR);
+        $curpCheckStmt->bindParam(':id', $id_personal, PDO::PARAM_INT);
+        $curpCheckStmt->execute();
+        
+        if ($curpCheckStmt->rowCount() > 0) {
+            echo json_encode(['success' => false, 'message' => 'La CURP ya existe en otro registro']);
+            return;
+        }
+        
+        // Actualizar datos (ahora incluye CURP)
         $updateQuery = "UPDATE personal 
-                        SET nombre_personal = :nombre, 
+                        SET curp = :curp,
+                            nombre_personal = :nombre, 
                             apellido_paterno = :paterno, 
                             apellido_materno = :materno, 
                             afiliacion_laboral = :afiliacion, 
                             cargo = :cargo 
-                        WHERE curp = :curp";
+                        WHERE id_personal = :id";
         
         $stmt = $pdo->prepare($updateQuery);
+        $stmt->bindParam(':curp', $curp, PDO::PARAM_STR);
         $stmt->bindParam(':nombre', $nombre_personal, PDO::PARAM_STR);
         $stmt->bindParam(':paterno', $apellido_paterno, PDO::PARAM_STR);
         $stmt->bindParam(':materno', $apellido_materno, PDO::PARAM_STR);
         $stmt->bindParam(':afiliacion', $afiliacion_laboral, PDO::PARAM_INT);
         $stmt->bindParam(':cargo', $cargo, PDO::PARAM_STR);
-        $stmt->bindParam(':curp', $curp, PDO::PARAM_STR);
+        $stmt->bindParam(':id', $id_personal, PDO::PARAM_INT);
         
         if ($stmt->execute()) {
             echo json_encode(['success' => true, 'message' => 'Datos actualizados correctamente']);
