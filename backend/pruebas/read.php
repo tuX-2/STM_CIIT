@@ -13,7 +13,7 @@ try {
     $stmt = $pdo->query("SELECT * FROM personal");
     $personal = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($personal as $p) {
-        echo "ID: {$p['id_personal']} | Nombre: {$p['nombre_personal']} {$p['apellido_paterno']} {$p['apellido_materno']} | Cargo: {$p['cargo']}<br>";
+        echo "ID: {$p['id_personal']} | Nombre: {$p['nombre_personal']} {$p['apellido_paterno']} {$p['apellido_materno']} | Cargo: {$p['cargo']}<br> | CURP: {$p['curp']}<br> ";
     }
 
     echo "<h2>Usuarios</h2>";
