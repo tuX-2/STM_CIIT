@@ -166,3 +166,116 @@ body {
     overflow-y: auto;
     margin-top: 1rem;
 }
+
+
+
+/* ==========================
+    ACTUALIZAR Y ELIMINAR 
+   ========================== */
+
+/* ==========================
+   RESET Y GENERALES
+   ========================== */
+   * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #ffffff;
+    color: #000000;
+}
+
+/* ==========================
+   ENCABEZADO
+   ========================== */
+.header {
+    background: #000000;
+    color: #ffffff;
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 3px solid #ffffff;
+}
+
+.header h2 {
+    font-weight: 300;
+    letter-spacing: 1px;
+}
+
+/* ==========================
+   CONTENEDOR PRINCIPAL
+   ========================== */
+.main-content {
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+/* ==========================
+   FORMULARIO EN DOS COLUMNAS
+   ========================== */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    gap: 2rem;
+    border: 2px solid #000000;
+    padding: 2rem;
+    background: #fafafa;
+    border-radius: 6px;
+}
+
+/* Cada columna */
+.form-left, .form-right {
+    display: flex;
+    flex-direction: column;
+}
+
+/* ==========================
+   CAMPOS DEL FORMULARIO
+   ========================== */
+label {
+    margin-top: 1rem;
+    font-weight: 500;
+}
+
+input[type="text"],
+select {
+    padding: 0.5rem;
+    border: 2px solid #000000;
+    border-radius: 4px;
+    font-size: 1rem;
+    background: #ffffff;
+}
+
+/* ==========================
+   BOTÓN
+   ========================== */
+.form-actions {
+    grid-column: span 2; /* Ocupa ambas columnas */
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+input[type="submit"] {
+    padding: 0.7rem 1.5rem;
+    border: none;
+    background: #000000;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+input[type="submit"]:hover {
+    background: #444444;
+}
+
+/* ==========================
+   RESPONSIVO
+   ========================== */
+@media (max-width: 700px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
