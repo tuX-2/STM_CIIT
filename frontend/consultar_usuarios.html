@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de personal</title>
+    <link rel="stylesheet" href="./css/panel_general.css" />
+    <link rel="stylesheet" href="./css/gestionPersonal.css" />
+</head>
+
+<body>
+    <header class="header">
+        <h1>Gestión de Usuarios</h1>
+    </header>
+
+    <main class="main-content">
+        <section class="welcome-section">
+            <h2>Consulta de Usuarios</h2>
+            <form method="POST" class="grid-container">
+                <div class="form-field">
+                    <label for="numero_personal">Clave</label>
+                    <input type="text" id="clave_usuario" name="clave_usuario" required
+                        placeholder="Clave única de personal del usuario" />
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Consultar</button>
+                    <button type="reset">Limpiar</button>
+                    <button type="button" onclick="window.location.href='panel_general.html'">
+                        Volver
+                    </button>
+                </div>
+            </form>
+
+            <div class="content-area active result-container" id="resultado-consulta">
+                <h3>Resultados de la Consulta</h3>
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre de usuario</th>
+                            <th>Nombre completo</th>
+                            <th>Correo electrónico</th>
+                            <th>Clave de Identificación de Personal</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="./js/gestion_usuarios.js"></script>
+</body>
+
+</html>

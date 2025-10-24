@@ -22,12 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Verificar si la clave de personal existe
-        $sql = "SELECT COUNT(*) FROM personal WHERE id_personal = :clave";
+        $sql = "SELECT id_personal FROM personal WHERE curp = :clave";
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['clave' => $clave_personal]);
-        $existe = $stmt->fetchColumn();
+        $id_personal = $stmt->fetchColumn();
 
-        if ($existe == 0) {
+        if ($id_personal == 0) {
             echo "La clave de identificación ingresada no existe en la base de datos.";
             exit;
         }
@@ -49,8 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'nombre' => $nombre,
             'password' => password_hash($password, PASSWORD_BCRYPT),
             'correo' => $correo,
-            'clave' => $clave_personal
-
+            'clave' => $id_personal
         ]);
 
         echo "Usuario registrado exitosamente.";
