@@ -17,29 +17,30 @@
         <h2>Actualización de Usuarios</h2>
     </section>
 
-    <div class="container">
-        <!-- Sección de Búsqueda -->
-        <section class="search-section">
-            <div class="search-box">
-                <div class="form-group">
-                    <label for="curp_usuario">
-                        CURP del Usuario <span class="required">*</span>
-                    </label>
-                    <input 
-                        type="text" 
-                        id="curp_usuario" 
-                        placeholder="Introduce el CURP ( 18 caracteres)"
-                        maxlength="18"
-                        pattern="[A-Z]{4}[0-9]{6}[HM][A-Z]{5}[0-9A-Z]{2}"
-                        style="text-transform: uppercase;"
-                        required>
-                    <small class="helper-text">Presiona Enter o clic en Buscar</small>
-                </div>
-                <button type="button" class="btn btn-primary" onclick="buscarUsuario()">
-                    Buscar
-                </button>
+<div class="container">
+    <!-- Sección de Búsqueda -->
+    <section class="search-section">
+        <div class="search-box">
+            <div class="form-group">
+                <label for="curp_usuario">
+                    CURP del Usuario <span class="required">*</span>
+                </label>
+                <input 
+                    type="text" 
+                    id="curp_usuario" 
+                    placeholder="Introduce el CURP (18 caracteres)"
+                    maxlength="18"
+                    style="text-transform: uppercase;"
+                    required>
+                <small class="helper-text">Presiona Enter o clic en Buscar</small>
             </div>
-        </section>
+            <button type="button" class="btn btn-primary" onclick="buscarUsuario()">
+                Buscar
+            </button>
+        </div>
+    </section>
+</div>
+
 
         <!-- Mensaje de alerta -->
         <div id="alertMessage" class="alert"></div>

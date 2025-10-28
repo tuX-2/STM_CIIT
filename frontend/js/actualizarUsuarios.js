@@ -69,12 +69,19 @@ function buscarUsuario() {
         return;
     }
     
-    // Validar formato básico de CURP (18 caracteres)
+    // Validar longitud exacta
     if (curpUsuario.length !== 18) {
         mostrarAlerta('error', 'El CURP debe tener exactamente 18 caracteres');
         return;
     }
-    
+
+    // Validar formato correcto del CURP
+    const regexCURP = /^[A-Z]{4}\d{6}[HM][A-Z]{5}[0-9A-Z]{2}$/;
+    if (!regexCURP.test(curpUsuario)) {
+        mostrarAlerta('error', 'El formato del CURP no es válido');
+        return;
+    }
+
     // Mostrar indicador de carga
     mostrarCargando(true);
     
