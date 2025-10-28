@@ -102,6 +102,7 @@ label {
 /* ==========================
    CAMPOS DEL FORMULARIO
    ========================== */
+input[type="text"],
 input[type="number"],
 input[type="email"],
 input[type="password"],
@@ -117,6 +118,7 @@ select {
     transition: border-color 0.3s;
 }
 
+input[type="text"]:focus,
 input[type="number"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus,
@@ -125,6 +127,7 @@ select:focus {
     border-color: #444444;
 }
 
+input[type="text"]:disabled,
 input[type="number"]:disabled,
 input[type="email"]:disabled,
 input[type="password"]:disabled,
@@ -133,7 +136,6 @@ select:disabled {
     cursor: not-allowed;
     opacity: 0.6;
 }
-
 /* ==========================
    BOTONES
    ========================== */
