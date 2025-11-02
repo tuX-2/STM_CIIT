@@ -25,7 +25,7 @@ CREATE TABLE usuarios (
     nombre_usuario VARCHAR(100),
     contrasena VARCHAR(100),
     correo_electronico VARCHAR(150),
-    identificador_de_rh INT REFERENCES personal(id_personal)
+    identificador_de_rh INT REFERENCES personal(id_personal) ON DELETE CASCADE
 );
 
 CREATE TABLE productos (
