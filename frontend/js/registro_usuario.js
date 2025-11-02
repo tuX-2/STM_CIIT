@@ -123,7 +123,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
     try {
 
-        const response = await fetch("/../backend/pruebas/registrar_usuario.php", {
+        const response = await fetch("/../backend/registrar_usuario.php", {
             method: "POST",
             body: formData,
         });

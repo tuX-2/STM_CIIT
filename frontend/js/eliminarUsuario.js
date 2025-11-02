@@ -1,6 +1,6 @@
 // Variables globales
 let usuarioActual = null;
-const URL_BASE = '../backend/pruebas/eliminarUsuario.php';
+const URL_BASE = '../backend/eliminarUsuario.php';
 
 // Esperar a que el DOM esté completamente cargado
 if (document.readyState === 'loading') {

@@ -1,6 +1,6 @@
 // Variables globales
 let usuarioActual = null;
-const URL_BASE = '../backend/pruebas/actualizarUsuario.php';
+const URL_BASE = '../backend/actualizarUsuario.php';
 
 // Inicializar al cargar la página
 document.addEventListener('DOMContentLoaded', function() {
