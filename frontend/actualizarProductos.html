@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar producto</title>
+    <link rel="stylesheet" href="./css/gestionProductos.css">
+</head>
+<body>
+
+    <h2>Actualizar producto</h2>
+
+    <div class="form-container">
+
+        <div class="form-col">
+            <input type="hidden" name="id_producto" id="id_producto">
+
+            <label for="nombre_producto">Nombre del producto:</label>
+            <input type="text" id="nombre_producto" name="nombre_producto">
+
+            <label for="ubicacion_producto">Ubicación (id_localidad):</label>
+            <input type="number" id="ubicacion_producto" name="ubicacion_producto">
+
+            <label for="peso">Peso:</label>
+            <input type="number" id="peso" name="peso" step="0.01">
+
+            <label for="altura">Altura:</label>
+            <input type="number" id="altura" name="altura" step="0.01">
+
+            <label for="largo">Largo:</label>
+            <input type="number" id="largo" name="largo" step="0.01">
+
+            <label for="ancho">Ancho:</label>
+            <input type="number" id="ancho" name="ancho" step="0.01">
+        </div>
+
+        <div class="form-col">
+            <label for="cajas_por_cama">Cajas por cama:</label>
+            <input type="number" id="cajas_por_cama" name="cajas_por_cama">
+
+            <label for="camas_por_pallet">Camas por pallet:</label>
+            <input type="number" id="camas_por_pallet" name="camas_por_pallet">
+
+            <label for="peso_soportado">Peso soportado:</label>
+            <input type="number" id="peso_soportado" name="peso_soportado" step="0.01">
+
+            <label for="peso_volumetrico">Peso volumétrico:</label>
+            <input type="number" id="peso_volumetrico" name="peso_volumetrico" step="0.01">
+
+            <label for="unidades_existencia">Unidades en existencia:</label>
+            <input type="number" id="unidades_existencia" name="unidades_existencia" step="0.01">
+
+            <label for="tipo_de_embalaje">Tipo de embalaje:</label>
+            <input type="text" id="tipo_de_embalaje" name="tipo_de_embalaje">
+
+            <label for="tipo_de_mercancia">Tipo de mercancía:</label>
+            <input type="text" id="tipo_de_mercancia" name="tipo_de_mercancia">
+        </div>
+    </div>
+
+</body>
+</html>

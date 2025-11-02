@@ -68,12 +68,11 @@ function inicializarActualizar() {
         }
     });
     
-    // También buscar cuando pierde el foco
-    curpBusquedaInput.addEventListener('blur', function() {
-        if (this.value.trim() !== '') {
-            buscarPersonalActualizar(curpBusquedaInput, idPersonalInput, curpInput);
-        }
-    });
+    // curpBusquedaInput.addEventListener('blur', function() {
+    //     if (this.value.trim() !== '') {
+    //         buscarPersonalActualizar(curpBusquedaInput, idPersonalInput, curpInput);
+    //     }
+    // });
     
     // Manejar el envío del formulario
     formulario.addEventListener('submit', function(e) {
@@ -240,11 +239,11 @@ function inicializarEliminar() {
         }
     });
     
-    curpBusquedaInput.addEventListener('blur', function() {
-        if (this.value.trim() !== '') {
-            buscarPersonalEliminar();
-        }
-    });
+    //curpBusquedaInput.addEventListener('blur', function() {
+    //    if (this.value.trim() !== '') {
+    //        buscarPersonalEliminar();
+    //    }
+    //});
     
     // Convertir a mayúsculas y validar en tiempo real
     curpBusquedaInput.addEventListener('input', function() {
