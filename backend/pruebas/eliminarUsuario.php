@@ -19,7 +19,7 @@ function sendJsonResponse($success, $message, $data = null) {
 }
 
 // Incluir archivo de conexión
-$rutaConexion = 'config/conexion.php';
+$rutaConexion = '../config/conexion.php';
 
 if (!file_exists($rutaConexion)) {
     sendJsonResponse(false, 'Archivo de conexión no encontrado');
