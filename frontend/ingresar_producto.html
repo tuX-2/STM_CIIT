@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Productos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #333;
+            font-size: 28px;
+            font-weight: normal;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px 40px;
+            margin-bottom: 40px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+            font-weight: 500;
+            position: relative;
+            cursor: help;
+        }
+
+        label .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+
+        label .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 250px;
+            background-color: #555;
+            color: #fff;
+            text-align: left;
+            border-radius: 6px;
+            padding: 8px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -125px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            font-weight: normal;
+        }
+
+        label .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #4CAF50;
+        }
+
+        input.error,
+        select.error {
+            border-color: #f44336;
+        }
+
+        .error-message {
+            color: #f44336;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        input:disabled {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 12px 40px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .btn-guardar {
+            background-color: #000;
+            color: white;
+        }
+
+        .btn-guardar:hover {
+            background-color: #333;
+        }
+
+        .btn-limpiar {
+            background-color: #666;
+            color: white;
+        }
+
+        .btn-limpiar:hover {
+            background-color: #888;
+        }
+
+        .btn-cancelar {
+            background-color: #000;
+            color: white;
+        }
+
+        .btn-cancelar:hover {
+            background-color: #333;
+        }
+
+        .success-message {
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Registro de Productos</h1>
+        
+        <div class="success-message" id="successMessage"></div>
+
+        <form id="formProducto" novalidate>
+            <div class="form-grid">
+                <!-- Nombre del Producto -->
+                <div class="form-group">
+                    <label>
+                        Nombre del Producto
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Ingrese el nombre del producto. Solo se permiten letras, números y espacios.</span>
+                        </span>
+                    </label>
+                    <input type="text" id="nombre_producto" name="nombre_producto" placeholder="Ej. Producto A">
+                    <span class="error-message" id="error_nombre_producto"></span>
+                </div>
+
+                <!-- Ubicación del Producto -->
+                <div class="form-group">
+                    <label>
+                        Ubicación del Producto
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Seleccione la localidad donde se encuentra el producto.</span>
+                        </span>
+                    </label>
+                    <select id="ubicacion_producto" name="ubicacion_producto">
+                        <option value="">Seleccione una localidad</option>
+                    </select>
+                    <span class="error-message" id="error_ubicacion_producto"></span>
+                </div>
+
+                <!-- Peso -->
+                <div class="form-group">
+                    <label>
+                        Peso (kg)
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Ingrese el peso del producto en kilogramos. Debe ser mayor a 0.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="peso" name="peso" step="0.01" placeholder="0.00">
+                    <span class="error-message" id="error_peso"></span>
+                </div>
+
+                <!-- Altura -->
+                <div class="form-group">
+                    <label>
+                        Altura (m)
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Ingrese la altura del producto en metros. Debe ser mayor a 0.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="altura" name="altura" step="0.01" placeholder="0.00">
+                    <span class="error-message" id="error_altura"></span>
+                </div>
+
+                <!-- Largo -->
+                <div class="form-group">
+                    <label>
+                        Largo (m)
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Ingrese el largo del producto en metros para calcular el peso volumétrico.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="largo" name="largo" step="0.01" placeholder="0.00">
+                    <span class="error-message" id="error_largo"></span>
+                </div>
+
+                <!-- Ancho -->
+                <div class="form-group">
+                    <label>
+                        Ancho (m)
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Ingrese el ancho del producto en metros para calcular el peso volumétrico.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="ancho" name="ancho" step="0.01" placeholder="0.00">
+                    <span class="error-message" id="error_ancho"></span>
+                </div>
+
+                <!-- Cajas por Cama -->
+                <div class="form-group">
+                    <label>
+                        Cajas por Cama
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Ingrese el número de cajas que caben en una cama. Debe ser un número entero mayor a 0.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="cajas_por_cama" name="cajas_por_cama" step="1" placeholder="0">
+                    <span class="error-message" id="error_cajas_por_cama"></span>
+                </div>
+
+                <!-- Cajas por Pallet -->
+                <div class="form-group">
+                    <label>
+                        Cajas por Pallet
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Ingrese el número de cajas que caben en un pallet. Debe ser un número entero mayor a 0.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="cajas_por_pallet" name="cajas_por_pallet" step="1" placeholder="0">
+                    <span class="error-message" id="error_cajas_por_pallet"></span>
+                </div>
+
+                <!-- Peso Soportado -->
+                <div class="form-group">
+                    <label>
+                        Peso Soportado (kg)
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Ingrese el peso máximo que puede soportar el producto en kilogramos.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="peso_soportado" name="peso_soportado" step="0.01" placeholder="0.00">
+                    <span class="error-message" id="error_peso_soportado"></span>
+                </div>
+
+                <!-- Peso Volumétrico -->
+                <div class="form-group">
+                    <label>
+                        Peso Volumétrico (kg)
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Se calcula automáticamente con base en las dimensiones ingresadas (largo × ancho × altura × factor de conversión).</span>
+                        </span>
+                    </label>
+                    <input type="number" id="peso_volumetrico" name="peso_volumetrico" step="0.01" placeholder="0.00" disabled>
+                    <span class="error-message" id="error_peso_volumetrico"></span>
+                </div>
+
+                <!-- Unidades en Existencia -->
+                <div class="form-group">
+                    <label>
+                        Unidades en Existencia
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Ingrese la cantidad inicial de unidades disponibles en el inventario.</span>
+                        </span>
+                    </label>
+                    <input type="number" id="unidades_existencia" name="unidades_existencia" step="1" placeholder="0">
+                    <span class="error-message" id="error_unidades_existencia"></span>
+                </div>
+
+                <!-- Tipo de Embalaje -->
+                <div class="form-group">
+                    <label>
+                        Tipo de Embalaje
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Seleccione el tipo de embalaje según las normas NOM-002-SCT/2011 y NOM-011-SCT2/2012.</span>
+                        </span>
+                    </label>
+                    <select id="tipo_de_embalaje" name="tipo_de_embalaje">
+                        <option value="">Seleccione un tipo</option>
+                    </select>
+                    <span class="error-message" id="error_tipo_de_embalaje"></span>
+                </div>
+
+                <!-- Tipo de Mercancía -->
+                <div class="form-group">
+                    <label>
+                        Tipo de Mercancía
+                        <span class="tooltip">ℹ️
+                            <span class="tooltiptext">Seleccione el tipo de mercancía según las normas NOM aplicables.</span>
+                        </span>
+                    </label>
+                    <select id="tipo_de_mercancia" name="tipo_de_mercancia">
+                        <option value="">Seleccione un tipo</option>
+                    </select>
+                    <span class="error-message" id="error_tipo_de_mercancia"></span>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button type="submit" class="btn-guardar">Guardar</button>
+                <button type="button" class="btn-limpiar" id="btnLimpiar">Limpiar</button>
+                <button type="button" class="btn-cancelar" id="btnCancelar" onclick="window.location.href='panel_general.html'">Cancelar</button>
+            </div>
+        </form>
+    </div>
+
+    <script src="js/ingresar_producto.js"></script>
+</body>
+</html>

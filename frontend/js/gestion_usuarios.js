@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (clave) formData.append("clave_usuario", clave);
         tbody.innerHTML = `<tr><td colspan="4">Cargando usuarios...</td></tr>`;
 
-        fetch("/../backend/pruebas/consultar_usuario.php", {
+        fetch("/../backend/consultar_usuario.php", {
             method: "POST",
             body: formData
         })
