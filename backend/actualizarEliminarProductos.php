@@ -98,6 +98,64 @@ try {
                 echo json_encode(['success' => false, 'message' => 'Error al actualizar el producto']);
             }
             break;
+
+            case 'eliminar':
+    // Eliminar un producto
+    $data = json_decode(file_get_contents('php://input'), true);
+    
+    if (!isset($data['id_producto'])) {
+        echo json_encode(['success' => false, 'message' => 'ID del producto no proporcionado']);
+        exit;
+    }
+    
+    // Verificar que el producto existe antes de eliminar
+    $stmt = $pdo->prepare("SELECT id_producto FROM productos WHERE id_producto = :id");
+    $stmt->execute(['id' => $data['id_producto']]);
+    
+    if (!$stmt->fetch()) {
+        echo json_encode(['success' => false, 'message' => 'El producto no existe']);
+        exit;
+    }
+    
+    // Eliminar el producto
+    $stmt = $pdo->prepare("DELETE FROM productos WHERE id_producto = :id_producto");
+    $resultado = $stmt->execute(['id_producto' => $data['id_producto']]);
+    
+    if ($resultado) {
+        echo json_encode(['success' => true, 'message' => 'Producto eliminado correctamente']);
+    } else {
+        echo json_encode(['success' => false, 'message' => 'Error al eliminar el producto']);
+    }
+    break;
+
+    case 'eliminar':
+        // Eliminar un producto
+        $data = json_decode(file_get_contents('php://input'), true);
+        
+        if (!isset($data['id_producto'])) {
+            echo json_encode(['success' => false, 'message' => 'ID del producto no proporcionado']);
+            exit;
+        }
+        
+        // Verificar que el producto existe antes de eliminar
+        $stmt = $pdo->prepare("SELECT id_producto FROM productos WHERE id_producto = :id");
+        $stmt->execute(['id' => $data['id_producto']]);
+        
+        if (!$stmt->fetch()) {
+            echo json_encode(['success' => false, 'message' => 'El producto no existe']);
+            exit;
+        }
+        
+        // Eliminar el producto
+        $stmt = $pdo->prepare("DELETE FROM productos WHERE id_producto = :id_producto");
+        $resultado = $stmt->execute(['id_producto' => $data['id_producto']]);
+        
+        if ($resultado) {
+            echo json_encode(['success' => true, 'message' => 'Producto eliminado correctamente']);
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error al eliminar el producto']);
+        }
+        break;
             
         default:
             echo json_encode(['success' => false, 'message' => 'Acción no válida']);
