@@ -4,7 +4,7 @@ require_once __DIR__ . '/../config/conexion.php';
 try {
     $pdo->beginTransaction();
 
-    // 1️⃣ Insertar localidades y guardar sus IDs generados
+    // 1️⃣ Insertar localidades y guardar sus IDs
     $sql_localidades = "INSERT INTO localidades 
         (nombre_centro_trabajo, ubicacion_georeferenciada, poblacion, localidad, estado, tipo_instalacion)
         VALUES (:nombre_centro_trabajo, :ubicacion_georeferenciada, :poblacion, :localidad, :estado, :tipo_instalacion)
@@ -29,10 +29,10 @@ try {
             ':estado' => $loc[4],
             ':tipo_instalacion' => $loc[5]
         ]);
-        $ids_localidades[] = $stmt_localidades->fetchColumn(); // Guarda el id_localidad generado
+        $ids_localidades[] = $stmt_localidades->fetchColumn();
     }
 
-    // 2️⃣ Insertar personal usando los IDs obtenidos
+    // 2️⃣ Insertar personal
     $sql_personal = "INSERT INTO personal 
         (nombre_personal, apellido_paterno, apellido_materno, afiliacion_laboral, cargo, curp)
         VALUES (:nombre_personal, :apellido_paterno, :apellido_materno, :afiliacion_laboral, :cargo, :curp)
@@ -43,7 +43,7 @@ try {
         ['María', 'González', 'Pérez',  $ids_localidades[0], 'Autoridad', 'GOPM800101MOCNRR02'],
         ['Juan', 'López', 'Martínez',   $ids_localidades[1], 'Administrador del TMS', 'LOMJ850210HOCRRN03'],
         ['Ana', 'Ramírez', 'Castillo',  $ids_localidades[2], 'Operador Logístico', 'RACA900415MOCSTS04'],
-        ['Carlos', 'Hernández', 'Ortiz', $ids_localidades[3], 'Jefe de Almacén', 'HEOC820701HOCNRS05'],
+        ['Carlos', 'Hernández', 'Ortiz',$ids_localidades[3], 'Jefe de Almacén', 'HEOC820701HOCNRS05'],
         ['Fernanda', 'Vargas', 'Luna',  $ids_localidades[1], 'Cliente', 'VALF950812MOCNRN06']
     ];
 
@@ -58,10 +58,10 @@ try {
             ':cargo' => $p[4],
             ':curp' => $p[5]
         ]);
-        $ids_personal[] = $stmt_personal->fetchColumn(); // Guarda id_personal generado
+        $ids_personal[] = $stmt_personal->fetchColumn();
     }
 
-    // 3️⃣ Insertar usuarios con los IDs del personal
+    // 3️⃣ Insertar usuarios
     $sql_usuarios = "INSERT INTO usuarios 
         (nombre_usuario, contrasena, correo_electronico, identificador_de_rh)
         VALUES (:nombre_usuario, :contrasena, :correo_electronico, :identificador_de_rh)";
@@ -84,8 +84,50 @@ try {
         ]);
     }
 
+    // 4️⃣ Insertar productos
+    $sql_productos = "INSERT INTO productos 
+        (nombre_producto, ubicacion_producto, peso, altura, cajas_por_cama, camas_por_pallet,
+         peso_soportado, peso_volumetrico, unidades_existencia, tipo_de_embalaje, tipo_de_mercancia)
+        VALUES (:nombre_producto, :ubicacion_producto, :peso, :altura, :cajas_por_cama, :camas_por_pallet,
+         :peso_soportado, :peso_volumetrico, :unidades_existencia, :tipo_de_embalaje, :tipo_de_mercancia)";
+    $stmt_productos = $pdo->prepare($sql_productos);
+
+    $productos = [
+        // En Centro Productivo Oaxaca
+        ['Queso Oaxaca 1kg',          $ids_localidades[0], 1.0, 0.12, 12, 10, 500.0, 1.2, 240, 'Bolsa plástica', 'Lácteo'],
+        ['Queso Panela 500g',         $ids_localidades[0], 0.5, 0.08, 20, 8, 320.0, 0.8, 500, 'Empaque al vacío', 'Lácteo'],
+
+        // En Centro de Distribución Istmo
+        ['Yogurt Natural 1L',         $ids_localidades[1], 1.1, 0.22, 15, 9, 600.0, 1.3, 300, 'Botella PET', 'Lácteo'],
+        ['Yogurt con Frutas 500ml',   $ids_localidades[1], 0.55, 0.18, 24, 10, 400.0, 0.9, 450, 'Botella PET', 'Lácteo'],
+
+        // En PODEBI Huatulco
+        ['Caja de Empaque Vacía',     $ids_localidades[2], 0.3, 0.25, 40, 12, 200.0, 0.6, 120, 'Cartón corrugado', 'Material de embalaje'],
+
+        // En Almacén Central Puebla
+        ['Pallet Reutilizable',       $ids_localidades[3], 15.0, 0.15, 1, 1, 1500.0, 2.0, 50, 'Madera tratada', 'Equipo logístico'],
+        ['Film Stretch',              $ids_localidades[3], 2.0, 0.10, 25, 6, 300.0, 0.5, 200, 'Rollo plástico', 'Material de embalaje']
+    ];
+
+    foreach ($productos as $prod) {
+        $stmt_productos->execute([
+            ':nombre_producto' => $prod[0],
+            ':ubicacion_producto' => $prod[1],
+            ':peso' => $prod[2],
+            ':altura' => $prod[3],
+            ':cajas_por_cama' => $prod[4],
+            ':camas_por_pallet' => $prod[5],
+            ':peso_soportado' => $prod[6],
+            ':peso_volumetrico' => $prod[7],
+            ':unidades_existencia' => $prod[8],
+            ':tipo_de_embalaje' => $prod[9],
+            ':tipo_de_mercancia' => $prod[10]
+        ]);
+    }
+
     $pdo->commit();
-    echo "✅ Datos insertados correctamente y relaciones establecidas.";
+    echo "✅ Datos insertados correctamente (localidades, personal, usuarios y productos).";
+
 } catch (Exception $e) {
     $pdo->rollBack();
     echo "❌ Error al insertar los datos: " . $e->getMessage();

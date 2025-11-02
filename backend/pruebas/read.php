@@ -27,7 +27,7 @@ try {
     $stmt = $pdo->query("SELECT * FROM productos");
     $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     foreach ($productos as $prod) {
-        echo "ID: {$prod['id_producto']} | Nombre: {$prod['nombre_producto']} | Peso: {$prod['peso']} kg<br>";
+        echo "ID: {$prod['id_producto']} | Nombre: {$prod['nombre_producto']} | Peso: {$prod['peso']} kg<br> | Peso: {$prod['tipo_de_embalaje']} kg<br>";
     }
 
 } catch (PDOException $e) {

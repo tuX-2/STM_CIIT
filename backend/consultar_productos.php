@@ -1,148 +1,103 @@
 <?php
-// ajax/consultar_productos.php
 session_start();
-header('Content-Type: application/json');
-
-/*
-// Verificar que el usuario tenga permisos
-$roles_permitidos = ['Autoridad', 'Administrador del TMS', 'Operador Logistico', 'Jefe de Almacén', 'Cliente'];
-if (!isset($_SESSION['rol']) || !in_array($_SESSION['rol'], $roles_permitidos)) {
-    echo json_encode(['success' => false, 'error' => 'No tiene permisos para realizar esta acción']);
-    exit;
-}
-*/
-// Incluir archivo de conexión
 require_once __DIR__ . '/config/conexion.php';
+header('Content-Type: application/json; charset=utf-8');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 try {
-    // Obtener filtros
-    $filtro_nombre = isset($_POST['filtro_nombre']) ? trim($_POST['filtro_nombre']) : '';
-    $filtro_ubicacion = isset($_POST['filtro_ubicacion']) ? $_POST['filtro_ubicacion'] : array();
-    $filtro_tipo_mercancia = isset($_POST['filtro_tipo_mercancia']) ? $_POST['filtro_tipo_mercancia'] : array();
-    $filtro_tipo_embalaje = isset($_POST['filtro_tipo_embalaje']) ? $_POST['filtro_tipo_embalaje'] : array();
-    $filtro_rango_peso = isset($_POST['filtro_rango_peso']) ? $_POST['filtro_rango_peso'] : array();
-    
-    // Verificar que al menos un criterio esté presente
-    $hay_criterios = !empty($filtro_nombre) || 
-                     !empty($filtro_ubicacion) || 
-                     !empty($filtro_tipo_mercancia) || 
-                     !empty($filtro_tipo_embalaje) || 
-                     !empty($filtro_rango_peso);
-    
-    if (!$hay_criterios) {
-        throw new Exception('Debe especificar al menos un criterio de búsqueda.');
+    $sql = "
+        SELECT 
+            p.nombre_producto,
+            l.nombre_centro_trabajo AS nombre_localidad,
+            p.tipo_de_mercancia,
+            p.tipo_de_embalaje,
+            p.peso,
+            p.altura,
+            p.peso_volumetrico,
+            p.unidades_existencia
+        FROM productos p
+        INNER JOIN localidades l ON p.ubicacion_producto = l.id_localidad
+        WHERE 1=1
+    ";
+    $params = [];
+
+    // Helper para normalizar arrays
+    function getArray($key) {
+        if (!isset($_POST[$key])) return [];
+        $val = $_POST[$key];
+        return is_array($val)
+            ? array_values(array_filter($val, fn($v) => trim($v) !== ''))
+            : (trim($val) ? [trim($val)] : []);
     }
-    
-    // Construir consulta SQL dinámicamente
-    $query = "SELECT p.*, l.nombre_localidad 
-              FROM productos p 
-              INNER JOIN localidades l ON p.ubicacion_producto = l.id_localidad 
-              WHERE 1=1";
-    
-    $params = array();
-    $param_count = 1;
-    
-    // Filtro por nombre (búsqueda parcial)
-    if (!empty($filtro_nombre)) {
-        $query .= " AND LOWER(p.nombre_producto) LIKE LOWER($" . $param_count . ")";
-        $params[] = '%' . $filtro_nombre . '%';
-        $param_count++;
+
+    // Filtros
+    if (!empty($_POST['filtro_nombre'])) {
+        $sql .= " AND LOWER(p.nombre_producto) LIKE :nombre";
+        $params[':nombre'] = '%' . mb_strtolower($_POST['filtro_nombre'], 'UTF-8') . '%';
     }
-    
-    // Filtro por ubicación (múltiple)
-    if (!empty($filtro_ubicacion)) {
-        $placeholders = array();
-        foreach ($filtro_ubicacion as $ubicacion) {
-            $placeholders[] = "$" . $param_count;
-            $params[] = $ubicacion;
-            $param_count++;
+
+    $ubic = getArray('filtro_ubicacion');
+    if ($ubic) {
+        $in = [];
+        foreach ($ubic as $i => $id) {
+            $ph = ":ub$i";
+            $in[] = $ph;
+            $params[$ph] = (int)$id;
         }
-        $query .= " AND p.ubicacion_producto IN (" . implode(',', $placeholders) . ")";
+        $sql .= " AND p.ubicacion_producto IN (" . implode(',', $in) . ")";
     }
-    
-    // Filtro por tipo de mercancía (múltiple)
-    if (!empty($filtro_tipo_mercancia)) {
-        $placeholders = array();
-        foreach ($filtro_tipo_mercancia as $tipo) {
-            $placeholders[] = "$" . $param_count;
-            $params[] = $tipo;
-            $param_count++;
+
+    $merc = getArray('filtro_tipo_mercancia');
+    if ($merc) {
+        $in = [];
+        foreach ($merc as $i => $v) {
+            $ph = ":merc$i";
+            $in[] = $ph;
+            $params[$ph] = $v;
         }
-        $query .= " AND p.tipo_de_mercancia IN (" . implode(',', $placeholders) . ")";
+        $sql .= " AND p.tipo_de_mercancia IN (" . implode(',', $in) . ")";
     }
-    
-    // Filtro por tipo de embalaje (múltiple)
-    if (!empty($filtro_tipo_embalaje)) {
-        $placeholders = array();
-        foreach ($filtro_tipo_embalaje as $tipo) {
-            $placeholders[] = "$" . $param_count;
-            $params[] = $tipo;
-            $param_count++;
+
+    $emb = getArray('filtro_tipo_embalaje');
+    if ($emb) {
+        $in = [];
+        foreach ($emb as $i => $v) {
+            $ph = ":emb$i";
+            $in[] = $ph;
+            $params[$ph] = $v;
         }
-        $query .= " AND p.tipo_de_embalaje IN (" . implode(',', $placeholders) . ")";
+        $sql .= " AND p.tipo_de_embalaje IN (" . implode(',', $in) . ")";
     }
-    
-    // Filtro por rango de peso (múltiple)
-    if (!empty($filtro_rango_peso)) {
-        $condiciones_peso = array();
-        foreach ($filtro_rango_peso as $rango) {
-            switch ($rango) {
-                case '0-10':
-                    $condiciones_peso[] = "(p.peso >= 0 AND p.peso <= 10)";
-                    break;
-                case '10-50':
-                    $condiciones_peso[] = "(p.peso > 10 AND p.peso <= 50)";
-                    break;
-                case '50-100':
-                    $condiciones_peso[] = "(p.peso > 50 AND p.peso <= 100)";
-                    break;
-                case '100-500':
-                    $condiciones_peso[] = "(p.peso > 100 AND p.peso <= 500)";
-                    break;
-                case '500+':
-                    $condiciones_peso[] = "(p.peso > 500)";
-                    break;
+
+    $rangos = getArray('filtro_rango_peso');
+    if ($rangos) {
+        $cond = [];
+        foreach ($rangos as $i => $r) {
+            if (preg_match('/^(\d+)-(\d+)$/', $r, $m)) {
+                $ph1 = ":min$i"; $ph2 = ":max$i";
+                $params[$ph1] = (float)$m[1];
+                $params[$ph2] = (float)$m[2];
+                $cond[] = "(p.peso BETWEEN $ph1 AND $ph2)";
+            } elseif (preg_match('/^>\s*(\d+)/', $r, $m)) {
+                $ph = ":may$i"; $params[$ph] = (float)$m[1];
+                $cond[] = "p.peso > $ph";
+            } elseif (preg_match('/^<\s*(\d+)/', $r, $m)) {
+                $ph = ":men$i"; $params[$ph] = (float)$m[1];
+                $cond[] = "p.peso < $ph";
             }
         }
-        if (!empty($condiciones_peso)) {
-            $query .= " AND (" . implode(' OR ', $condiciones_peso) . ")";
-        }
+        if ($cond) $sql .= " AND (" . implode(' OR ', $cond) . ")";
     }
-    
-    $query .= " ORDER BY p.nombre_producto ASC";
-    
-    // Ejecutar consulta
-    if (empty($params)) {
-        $resultado = pg_query($conn, $query);
-    } else {
-        $resultado = pg_query_params($conn, $query, $params);
-    }
-    
-    if (!$resultado) {
-        throw new Exception('Error al ejecutar la consulta: ' . pg_last_error($conn));
-    }
-    
-    // Obtener resultados
-    $productos = array();
-    while ($row = pg_fetch_assoc($resultado)) {
-        $productos[] = $row;
-    }
-    
-    echo json_encode([
-        'success' => true,
-        'productos' => $productos,
-        'total' => count($productos)
-    ]);
-    
-} catch (Exception $e) {
-    echo json_encode([
-        'success' => false,
-        'error' => $e->getMessage()
-    ]);
-}
 
-// Cerrar conexión
-if (isset($conn)) {
-    pg_close($conn);
+    $sql .= " ORDER BY p.nombre_producto ASC";
+
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    echo json_encode(['success' => true, 'productos' => $productos], JSON_UNESCAPED_UNICODE);
+
+} catch (Exception $e) {
+    echo json_encode(['success' => false, 'error' => $e->getMessage()]);
 }
-?>

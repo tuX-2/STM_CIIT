@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Consultar Productos</title>
     <style>
         * {
@@ -23,7 +24,7 @@
             background-color: white;
             padding: 40px;
             border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
         h1 {
@@ -73,7 +74,7 @@
         input[type="text"]:focus,
         select:focus {
             outline: none;
-            border-color: #4CAF50;
+            border-color: #4caf50;
         }
 
         select[multiple] {
@@ -208,79 +209,93 @@
             font-size: 12px;
             margin-top: 5px;
         }
+
+        .check-filtro {
+            margin-right: 6px;
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        .error-message {
+            color: #c62828;
+            font-size: 0.85em;
+            display: block;
+            margin-top: 3px;
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <h1>Consultar Productos</h1>
-        
-        <div class="filtros-section">
-            <form id="formConsulta">
+
+        <section class="filtros-section">
+            <form id="formConsulta" autocomplete="off">
                 <div class="filtros-grid">
-                    <!-- Nombre del Producto -->
+                    <!-- Nombre -->
                     <div class="form-group">
                         <label for="filtro_nombre">Nombre del Producto</label>
-                        <input type="text" id="filtro_nombre" name="filtro_nombre" placeholder="Buscar por texto parcial o completo">
-                        <span class="hint-text">Búsqueda parcial permitida</span>
-                        <span class="error-message" id="error_filtro_nombre"></span>
+                        <input type="text" id="filtro_nombre" name="filtro_nombre" placeholder="Buscar por nombre" />
+                        <span class="hint-text">Puede usar texto parcial</span>
                     </div>
 
                     <!-- Ubicación -->
                     <div class="form-group">
                         <label for="filtro_ubicacion">Ubicación del Producto</label>
-                        <select id="filtro_ubicacion" name="filtro_ubicacion[]" multiple>
-                        </select>
-                        <span class="hint-text">Mantenga Ctrl para seleccionar múltiples</span>
-                        <span class="error-message" id="error_filtro_ubicacion"></span>
+                        <div class="select-wrapper">
+                            <select id="filtro_ubicacion" name="filtro_ubicacion[]" multiple></select>
+                        </div>
                     </div>
 
                     <!-- Tipo de Mercancía -->
                     <div class="form-group">
                         <label for="filtro_tipo_mercancia">Tipo de Mercancía</label>
-                        <select id="filtro_tipo_mercancia" name="filtro_tipo_mercancia[]" multiple>
-                        </select>
-                        <span class="hint-text">Mantenga Ctrl para seleccionar múltiples</span>
-                        <span class="error-message" id="error_filtro_tipo_mercancia"></span>
+                        <div class="select-wrapper">
+                            <select id="filtro_tipo_mercancia" name="filtro_tipo_mercancia[]" multiple></select>
+                        </div>
                     </div>
 
                     <!-- Tipo de Embalaje -->
                     <div class="form-group">
                         <label for="filtro_tipo_embalaje">Tipo de Embalaje</label>
-                        <select id="filtro_tipo_embalaje" name="filtro_tipo_embalaje[]" multiple>
-                        </select>
-                        <span class="hint-text">Mantenga Ctrl para seleccionar múltiples</span>
-                        <span class="error-message" id="error_filtro_tipo_embalaje"></span>
+                        <div class="select-wrapper">
+                            <select id="filtro_tipo_embalaje" name="filtro_tipo_embalaje[]" multiple></select>
+                        </div>
                     </div>
 
                     <!-- Rango de Peso -->
                     <div class="form-group">
-                        <label for="filtro_rango_peso">Rango de Peso</label>
-                        <select id="filtro_rango_peso" name="filtro_rango_peso[]" multiple>
-                            <option value="0-10">0 - 10 kg</option>
-                            <option value="10-50">10 - 50 kg</option>
-                            <option value="50-100">50 - 100 kg</option>
-                            <option value="100-500">100 - 500 kg</option>
-                            <option value="500+">500+ kg</option>
-                        </select>
-                        <span class="hint-text">Mantenga Ctrl para seleccionar múltiples</span>
-                        <span class="error-message" id="error_filtro_rango_peso"></span>
+                        <label for="filtro_rango_peso">Rango de Peso (kg)</label>
+                        <div class="select-wrapper">
+                            <select id="filtro_rango_peso" name="filtro_rango_peso[]" multiple>
+                                <option value="0-10">0 - 10</option>
+                                <option value="10-50">10 - 50</option>
+                                <option value="50-100">50 - 100</option>
+                                <option value="100-500">100 - 500</option>
+                                <option value=">500">Más de 500</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
 
                 <div class="button-container">
                     <button type="submit" class="btn-consultar">Consultar</button>
-                    <button type="button" class="btn-limpiar" id="btnLimpiarFiltros">Limpiar</button>
-                    <button type="button" class="btn-cancelar" id="btnCancelar">Cancelar</button>
+                    <button type="button" id="btnLimpiarFiltros" class="btn-limpiar">
+                        Limpiar
+                    </button>
+                    <button type="button" id="btnCancelar" class="btn-cancelar">
+                        Cancelar
+                    </button>
                 </div>
             </form>
-        </div>
+        </section>
 
-        <div class="resultados-section" id="resultadosSection">
+        <section class="resultados-section" id="resultadosSection">
             <div class="resultados-header">
-                <h2>Resultados de la Búsqueda</h2>
-                <span class="total-resultados" id="totalResultados">0 productos encontrados</span>
+                <h2>Resultados</h2>
+                <span id="totalResultados">0 productos encontrados</span>
             </div>
-            
+
             <div class="tabla-container">
                 <table id="tablaResultados">
                     <thead>
@@ -289,19 +304,19 @@
                             <th>Ubicación</th>
                             <th>Tipo Mercancía</th>
                             <th>Tipo Embalaje</th>
-                            <th>Peso (kg)</th>
-                            <th>Altura (m)</th>
-                            <th>Peso Volumétrico (kg)</th>
-                            <th>Unidades Existencia</th>
+                            <th>Peso</th>
+                            <th>Altura</th>
+                            <th>Peso Volumétrico</th>
+                            <th>Existencia</th>
                         </tr>
                     </thead>
-                    <tbody id="tablaResultadosBody">
-                    </tbody>
+                    <tbody id="tablaResultadosBody"></tbody>
                 </table>
             </div>
-        </div>
+        </section>
     </div>
 
     <script src="js/consultar_productos.js"></script>
 </body>
+
 </html>
