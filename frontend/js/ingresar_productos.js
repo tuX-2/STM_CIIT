@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Si hay datos, pedir confirmación
         if (hayDatos) {
             if (confirm('¿Está seguro de que desea cancelar? Los datos no guardados se perderán.')) {
-                window.location.href = 'menu_principal.php';
+                window.location.href = '/panel_general.html';
             }
         } else {
             // Si no hay datos, regresar directamente
