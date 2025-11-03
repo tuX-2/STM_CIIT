@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eliminar Localidades</title>
+    <link rel="stylesheet" href="./css/eliminarLocalidades.css">
+</head>
+<body>
+    <!-- Header Principal -->
+    <header class="main-header">
+        <h1>Sistema de Gestión Logística</h1>
+    </header>
+
+    <!-- Subheader -->
+    <section class="subheader">
+        <h2>Eliminación de Localidades</h2>
+    </section>
+
+    <div class="container">
+        <!-- Sección de Búsqueda -->
+        <section class="search-section">
+            <h3>Buscar Localidad</h3>
+            
+            <!-- Búsqueda por ID -->
+            <div class="search-group">
+                <div class="form-group">
+                    <label for="id_localidad">
+                        Identificador de Localidad (ID) <span class="required">*</span>
+                    </label>
+                    <input 
+                        type="number" 
+                        id="id_localidad" 
+                        placeholder="Ingrese el ID de la localidad"
+                        min="1">
+                    <small class="helper-text">Búsqueda principal por ID</small>
+                </div>
+            </div>
+
+            <!-- Separador -->
+            <div class="separator">
+                <span>O buscar mediante filtros</span>
+            </div>
+
+            <!-- Filtros de Búsqueda -->
+            <div class="filters-group">
+                <div class="form-group">
+                    <label for="nombre_centro_trabajo">
+                        Nombre del Centro de Trabajo
+                    </label>
+                    <input 
+                        type="text" 
+                        id="nombre_centro_trabajo" 
+                        placeholder="Ingrese nombre (mínimo 3 caracteres)"
+                        minlength="3">
+                    <small class="helper-text">Búsqueda parcial o completa</small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="localidad">Localidad</label>
+                        <input 
+                            type="text" 
+                            id="localidad" 
+                            placeholder="Ingrese localidad"
+                            minlength="3">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="poblacion">Población</label>
+                        <input 
+                            type="text" 
+                            id="poblacion" 
+                            placeholder="Ingrese población"
+                            minlength="3">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estado">Estado</label>
+                        <input 
+                            type="text" 
+                            id="estado" 
+                            placeholder="Ingrese estado"
+                            minlength="3">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones de Búsqueda -->
+            <div class="search-actions">
+                <button type="button" class="btn btn-primary" id="btnBuscar">
+                    Buscar
+                </button>
+                <button type="button" class="btn btn-secondary" id="btnLimpiar">
+                    Limpiar
+                </button>
+            </div>
+        </section>
+
+        <!-- Mensaje de alerta -->
+        <div id="alertMessage" class="alert"></div>
+
+        <!-- Sección de Resultados (Inicialmente oculta) -->
+        <section id="resultsSection" class="results-section">
+            <h3>Resultados de la Búsqueda</h3>
+            <div id="resultsContainer" class="results-container">
+                <!-- Los resultados se cargarán dinámicamente aquí -->
+            </div>
+        </section>
+
+        <!-- Información de la Localidad (Inicialmente oculta) -->
+        <section id="localidadInfoSection" class="localidad-info-section">
+            <div class="info-box">
+                <h3>Información de la Localidad Seleccionada</h3>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <strong>ID:</strong> 
+                        <span id="info_id">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Nombre del Centro de Trabajo:</strong> 
+                        <span id="info_nombre_centro">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Ubicación Georeferenciada:</strong> 
+                        <span id="info_ubicacion">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Población:</strong> 
+                        <span id="info_poblacion">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Localidad:</strong> 
+                        <span id="info_localidad">-</span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Estado:</strong> 
+                        <span id="info_estado">-</span>
+                    </div>
+                    <div class="info-item" style="grid-column: 1 / -1;">
+                        <strong>Tipo de Instalación:</strong> 
+                        <span id="info_tipo_instalacion">-</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advertencia -->
+            <div class="warning-box">
+                <p><strong>ADVERTENCIA:</strong> Esta acción es irreversible. La localidad será eliminada permanentemente del sistema.</p>
+            </div>
+
+            <!-- Botones de Acción -->
+            <div class="form-actions">
+                <button type="button" class="btn btn-danger" id="btnEliminar" disabled>
+                    Eliminar Localidad
+                </button>
+                <button type="button" class="btn btn-cancel" id="btnCancelar">
+                    Cancelar
+                </button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal de Confirmación de Eliminación -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirmar Eliminación</h3>
+            <p>¿Está seguro de que desea eliminar la localidad:</p>
+            <p class="modal-highlight"><strong id="modal_nombre_localidad"></strong>?</p>
+            <p class="modal-warning">Esta acción no se puede deshacer.</p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">
+                    Confirmar Eliminación
+                </button>
+                <button type="button" class="btn btn-secondary" id="btnCancelarModal">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Limpiar -->
+    <div id="limpiarModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirmar Limpieza</h3>
+            <p>¿Desea limpiar los datos mostrados?</p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary" id="btnConfirmarLimpiar">
+                    Confirmar
+                </button>
+                <button type="button" class="btn btn-secondary" id="btnCancelarLimpiar">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación de Cancelar -->
+    <div id="cancelarModal" class="modal">
+        <div class="modal-content">
+            <h3>Confirmar Salida</h3>
+            <p>¿Está seguro de que desea salir sin eliminar?</p>
+            <p>Se perderán los datos cargados.</p>
+            <div class="modal-actions">
+                <button type="button" class="btn btn-primary" id="btnConfirmarCancelar">
+                    Sí, salir
+                </button>
+                <button type="button" class="btn btn-secondary" id="btnNoSalir">
+                    No, permanecer
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/eliminarLocalidades.js"></script>
+</body>
+</html>
