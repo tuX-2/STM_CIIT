@@ -234,6 +234,56 @@ async function guardarProducto() {
     }
 }
 
+// Eliminar producto
+async function eliminarProducto() {
+    const id = document.getElementById('id_producto').value;
+    
+    if (!id) {
+        mostrarMensaje('Debe seleccionar un producto', 'error');
+        return;
+    }
+    
+    const nombre = document.getElementById('nombre_producto').value;
+    
+    // Confirmar eliminación
+    if (!confirm(`¿Está seguro de que desea eliminar el producto "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+        return;
+    }
+    
+    const datos = {
+        id_producto: id
+    };
+    
+    console.log('Eliminando producto:', datos);
+    
+    try {
+        const response = await fetch('/backend/actualizarEliminarProductos.php?action=eliminar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(datos)
+        });
+        
+        const data = await response.json();
+        
+        console.log('Respuesta del servidor:', data);
+        
+        if (data.success) {
+            mostrarMensaje('Producto eliminado correctamente', 'exito');
+            // Recargar la lista después de eliminar
+            await cargarListaProductos();
+            // Limpiar el formulario
+            setTimeout(limpiarFormulario, 2000);
+        } else {
+            mostrarMensaje('Error al eliminar: ' + data.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error en eliminarProducto:', error);
+        mostrarMensaje('Error de conexión: ' + error.message, 'error');
+    }
+}
+
 // Limpiar formulario
 function limpiarFormulario() {
     document.getElementById('buscador_producto').value = '';
