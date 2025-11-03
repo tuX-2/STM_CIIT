@@ -280,13 +280,13 @@
                 <!-- Cajas por Pallet -->
                 <div class="form-group">
                     <label>
-                        Cajas por Pallet
+                        Camas por Pallet
                         <span class="tooltip">ℹ️
                             <span class="tooltiptext">Ingrese el número de cajas que caben en un pallet. Debe ser un número entero mayor a 0.</span>
                         </span>
                     </label>
-                    <input type="number" id="cajas_por_pallet" name="cajas_por_pallet" step="1" placeholder="0">
-                    <span class="error-message" id="error_cajas_por_pallet"></span>
+                    <input type="number" id="camas_por_pallet" name="camas_por_pallet" step="1" placeholder="0">
+                    <span class="error-message" id="error_camas_por_pallet"></span>
                 </div>
 
                 <!-- Peso Soportado -->
@@ -309,7 +309,7 @@
                             <span class="tooltiptext">Se calcula automáticamente con base en las dimensiones ingresadas (largo × ancho × altura × factor de conversión).</span>
                         </span>
                     </label>
-                    <input type="number" id="peso_volumetrico" name="peso_volumetrico" step="0.01" placeholder="0.00" disabled>
+                    <input type="number" id="peso_volumetrico" name="peso_volumetrico" step="0.01" placeholder="0.00" readonly>
                     <span class="error-message" id="error_peso_volumetrico"></span>
                 </div>
 
@@ -362,6 +362,6 @@
         </form>
     </div>
 
-    <script src="js/ingresar_producto.js"></script>
+    <script src="js/ingresar_productos.js"></script>
 </body>
 </html>
