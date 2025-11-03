@@ -413,6 +413,12 @@ function limpiarError(campo) {
 function guardarProducto() {
     const formData = new FormData(document.getElementById('formProducto'));
     
+    // Debug: Mostrar todos los datos que se están enviando
+    console.log('Datos del formulario:');
+    for (let [key, value] of formData.entries()) {
+        console.log(`${key}: ${value}`);
+    }
+    
     fetch('../backend/ingresar_producto.php', {
         method: 'POST',
         body: formData
