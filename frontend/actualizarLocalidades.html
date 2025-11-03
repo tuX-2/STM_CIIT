@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Actualizar Localidades</title>
+    <link rel="stylesheet" href="./css/actualizarLocalidades.css">
+</head>
+<body>
+    <!-- HEADER PRINCIPAL -->
+    <header class="main-header">
+        <h1>SISTEMA DE GESTIÓN LOGÍSTICA</h1>
+    </header>
+
+    <!-- SUBHEADER -->
+    <section class="subheader">
+        <h2>ACTUALIZAR LOCALIDADES</h2>
+    </section>
+
+    <!-- ALERTAS -->
+    <div id="alertContainer"></div>
+
+    <div class="container">
+        <!-- SECCIÓN DE BÚSQUEDA -->
+        <section class="search-section">
+            <form id="searchForm">
+                <div class="search-box">
+                    <div class="form-group">
+                        <label for="searchId">
+                            ID de Localidad
+                        </label>
+                        <input 
+                            type="number" 
+                            id="searchId" 
+                            name="searchId"
+                            placeholder="Ingrese ID"
+                            min="1">
+                        <span class="helper-text">Búsqueda por identificador único</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary">BUSCAR</button>
+                </div>
+
+                <div class="search-box" style="margin-top: 1.5rem;">
+                    <div class="form-group">
+                        <label for="searchNombre">Nombre del Centro de Trabajo</label>
+                        <input 
+                            type="text" 
+                            id="searchNombre" 
+                            name="searchNombre"
+                            placeholder="Ingrese nombre"
+                            minlength="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="searchLocalidad">Localidad</label>
+                        <input 
+                            type="text" 
+                            id="searchLocalidad" 
+                            name="searchLocalidad"
+                            placeholder="Ingrese localidad"
+                            minlength="3">
+                    </div>
+                </div>
+
+                <div class="search-box" style="margin-top: 1rem;">
+                    <div class="form-group">
+                        <label for="searchPoblacion">Población</label>
+                        <input 
+                            type="text" 
+                            id="searchPoblacion" 
+                            name="searchPoblacion"
+                            placeholder="Ingrese población"
+                            minlength="3">
+                    </div>
+                    <div class="form-group">
+                        <label for="searchEstado">Estado</label>
+                        <input 
+                            type="text" 
+                            id="searchEstado" 
+                            name="searchEstado"
+                            placeholder="Ingrese estado"
+                            minlength="3">
+                    </div>
+                </div>
+            </form>
+        </section>
+
+        <!-- SECCIÓN DE INFORMACIÓN Y EDICIÓN -->
+        <section class="user-info-section" id="editSection">
+            <!-- WARNING BOX -->
+            <div class="warning-box">
+                <p><strong>ADVERTENCIA:</strong> Los cambios realizados afectarán permanentemente el registro de la localidad.</p>
+            </div>
+
+            <!-- FORMULARIO DE EDICIÓN -->
+            <form id="updateForm">
+                <div class="info-box">
+                    <h3>DATOS DE LA LOCALIDAD</h3>
+                    
+                    <input type="hidden" id="idLocalidad" name="idLocalidad">
+                    
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <label for="nombreCentro">
+                                <strong>Nombre Centro de Trabajo <span class="required">*</span></strong>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="nombreCentro" 
+                                name="nombreCentro"
+                                maxlength="100"
+                                required
+                                disabled>
+                        </div>
+
+                        <div class="info-item">
+                            <label for="ubicacionGeo">
+                                <strong>Ubicación Georeferenciada</strong>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="ubicacionGeo" 
+                                name="ubicacionGeo"
+                                maxlength="200"
+                                placeholder="Lat, Long"
+                                disabled>
+                        </div>
+
+                        <div class="info-item">
+                            <label for="poblacion">
+                                <strong>Población <span class="required">*</span></strong>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="poblacion" 
+                                name="poblacion"
+                                maxlength="100"
+                                required
+                                disabled>
+                        </div>
+
+                        <div class="info-item">
+                            <label for="localidad">
+                                <strong>Localidad <span class="required">*</span></strong>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="localidad" 
+                                name="localidad"
+                                maxlength="100"
+                                required
+                                disabled>
+                        </div>
+
+                        <div class="info-item">
+                            <label for="estado">
+                                <strong>Estado <span class="required">*</span></strong>
+                            </label>
+                            <input 
+                                type="text" 
+                                id="estado" 
+                                name="estado"
+                                maxlength="100"
+                                required
+                                disabled>
+                        </div>
+
+                        <div class="info-item">
+                            <label for="tipoInstalacion">
+                                <strong>Tipo de Instalación <span class="required">*</span></strong>
+                            </label>
+                            <select 
+                                id="tipoInstalacion" 
+                                name="tipoInstalacion"
+                                required
+                                disabled
+                                style="width: 100%; padding: 0.75rem; border: 2px solid #000000; background: #ffffff; font-size: 1rem; font-family: inherit;">
+                                <option value="">Seleccione...</option>
+                                <option value="Centro Productivo">Centro Productivo</option>
+                                <option value="Centro de Distribucion">Centro de Distribución</option>
+                                <option value="PODEBI">PODEBI</option>
+                                <option value="Almacen">Almacén</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- BOTONES DE ACCIÓN -->
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" id="btnActualizar" disabled>
+                        ACTUALIZAR
+                    </button>
+                    <button type="button" class="btn btn-secondary" id="btnLimpiar" disabled>
+                        LIMPIAR
+                    </button>
+                    <button type="button" class="btn btn-cancel" id="btnCancelar">
+                        CANCELAR
+                    </button>
+                </div>
+            </form>
+        </section>
+    </div>
+
+    <!-- MODAL DE CONFIRMACIÓN -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <h3>CONFIRMAR ACCIÓN</h3>
+            <p id="modalMessage">¿Desea guardar los cambios realizados en la localidad?</p>
+            <p class="modal-warning" id="modalWarning" style="display:none;">Esta acción no se puede deshacer.</p>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="btnConfirmar">CONFIRMAR</button>
+                <button class="btn btn-cancel" id="btnCancelarModal">CANCELAR</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/actualizarLocalidad.js"></script>
+</body>
+</html>
