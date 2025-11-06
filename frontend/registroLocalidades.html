@@ -20,37 +20,38 @@
         <!-- REGISTRO DE LOCALIDADES-->
         <section class="welcome-section">
             <h2>Registro de Localidades</h2>
-            <form id="formRegistrarPersonal" class="grid-container">
+            <form id="formRegistrarLocalidades" class="grid-container">
 
-                <!-- Nombre del Centro de Trabajo-->
+                <!-- Nombre del Centro de Trabajo -->
                 <div class="form-field">
                     <label for="nombre_centro_trabajo">Nombre del Centro de Trabajo</label>
-                    <input type="text" id="nombre_centro_trabajo" name="nombre_centro_trabajo" required
-                        pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$" placeholder="Ej. PUBIS puebla"
-                        title="Solo letras">
+                    <input type="text" id="nombre_centro_trabajo" name="nombre_centro_trabajo" required maxlength="200"
+                        pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ0-9\s\-\.,]+$" placeholder="Ej. PUBIS"
+                        title="Solo letras y números">
                 </div>
 
-                <!-- Ubicación Georeferenciada (coordenadas) -->
+                <!-- Ubicación Georeferenciada -->
                 <div class="form-field">
                     <label for="ubicacion_georeferenciada">Ubicación Georeferenciada (Latitud, Longitud)</label>
                     <input type="text" id="ubicacion_georeferenciada" name="ubicacion_georeferenciada" required
-                        pattern="^-?\d{1,2}\.\d+,\s*-?\d{1,3}\.\d+$" placeholder="Ej. 19.4326, -99.1332"
+                        maxlength="200" pattern="^-?\d{1,2}\.\d+,\s*-?\d{1,3}\.\d+$" placeholder="Ej. 19.4326, -99.1332"
                         title="Formato: latitud, longitud (Ej. 19.4326, -99.1332)">
                 </div>
 
 
                 <!-- Población -->
                 <div class="form-field">
-                    <label for="poblacion">Poblacion</label>
-                    <input type="text" id="poblacion" name="poblacion" pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$"
-                        placeholder="Ej. San Luis Rio Colorado" title="Solo letras">
+                    <label for="poblacion">Población</label>
+                    <input type="text" id="poblacion" name="poblacion" required
+                        pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$" maxlength="100"
+                        placeholder="Ej. San Luis Río Colorado">
                 </div>
 
                 <!-- Localidad -->
                 <div class="form-field">
                     <label for="localidad">Localidad</label>
-                    <input type="text" id="localidad" name="localidad" pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$"
-                        placeholder="Ej. " title="Solo letras">
+                    <input type="text" id="localidad" name="localidad" required maxlength="100"
+                        pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$" placeholder="Ej. Centro">
                 </div>
 
                 <!-- Estado -->
@@ -67,7 +68,9 @@
                         <option value="">Seleccione un Tipo de Instalación</option>
                         <option value="Centro Productivo">Centro Productivo</option>
                         <option value="Centro de Distribución">Centro de Distribución</option>
-                        <option value="PODEBIS, Almacen">PODEBIS, Almacen</option>
+                        <option value="PODEBIS">PODEBIS</option>
+                        <option value="Almacen">Almacen</option>
+
                     </select>
                 </div>
 
@@ -84,15 +87,18 @@
         </section>
     </main>
 
-    <script src="../js/operacionesPersonal.js"></script>
-    <script src="../js/estados.js"></script>
-
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="module">
-        import { configurarBotonCancelar } from '../js/cancelar.js';
-        configurarBotonCancelar('btnCancelar', 'panel_general.html');
-    </script>
+
+    <!-- cancelar.js -->
+    <script src="../js/cancelar.js"></script>
+
+    <!-- estados.js -->
+    <script src="../js/estados.js"></script>
+
+    <!-- estados.js -->
+    <script src="../js/registrarLocalidad.js"></script>
+
 
 </body>
 

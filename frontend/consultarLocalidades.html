@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Localidades</title>
+    <link rel="stylesheet" href="./css/panel_general.css">
+    <link rel="stylesheet" href="./css/gestionLocalidades.css">
+</head>
+
+<body>
+    <header class="header">
+        <h1>Gestión de Localidades</h1>
+    </header>
+
+    <main class="main-content">
+        <section class="welcome-section">
+            <h2>Consulta de Localidades</h2>
+            <form action="/backend/consultarLocalidades.php" method="POST" class="grid-container">
+
+                <div class="form-field">
+                    <label for="curp_personal">CURP del Personal</label>
+                    <input type="text" style="text-transform: uppercase;"
+                        oninput="this.value = this.value.toUpperCase()" id="curp_personal" name="curp_personal" required
+                        placeholder="CURP del personal">
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit">Consultar</button>
+                    <button type="reset">Limpiar</button>
+                    <button type="button">Cancelar</button>
+                </div>
+
+            </form>
+
+            <div class="content-area active" id="resultado-consulta">
+                <h3>Resultados de la Consulta</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Apellido Paterno</th>
+                            <th>Apellido Materno</th>
+                            <th>Afiliación Laboral</th>
+                            <th>Cargo</th>
+                            <th>CURP</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabla-resultados">
+                        
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+    <script src="../js/operacionesPersonal.js"></script>
+
+</body>
+
+</html>

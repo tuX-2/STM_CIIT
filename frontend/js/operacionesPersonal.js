@@ -26,33 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // -----------------------------
-    // 2. Botón Cancelar del registro
-    // -----------------------------
-    const btnCancelar = document.getElementById('btnCancelar');
-    if (btnCancelar) {
-        btnCancelar.addEventListener('click', () => {
-            Swal.fire({
-                title: '¿Está seguro que desea cancelar el registro?',
-                text: "Se perderán los datos ingresados.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Se descartan los cambios',
-                cancelButtonText: 'Cancelar',
-                reverseButtons: true,
-                background: '#ffffff',
-                color: '#000000',
-                confirmButtonColor: '#000000',
-                cancelButtonColor: '#444444'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    window.location.href = 'panel_general.html';
-                }
-            });
-        });
-    }
-
-    // -----------------------------
-    // 3. Funcionalidad de Consultas
+    // 2. Funcionalidad de Consultas
     // -----------------------------
     const tablaCuerpo = document.getElementById('tabla-resultados');
     const form = document.querySelector('form');
@@ -131,14 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'panel_general.html';
         });
     }
-
-
-
-
-
-
-
-
 });
 
 document.addEventListener('DOMContentLoaded', () => {

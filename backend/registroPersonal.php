@@ -6,12 +6,12 @@
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     // Recibir datos del formulario
-    $nombre = $_POST["nombre_persona"] ?? '';
-    $apellidoPaterno = $_POST["apellido_paterno"] ?? '';
-    $apellidoMaterno = $_POST["apellido_materno"] ?? '';
-    $afiliacionLaboral = $_POST["afiliacion_laboral"] ?? '';
-    $cargo = $_POST["cargo"] ?? '';
-    $curp = $_POST["curp"] ?? '';
+    $nombreCentro = $_POST["nombre_centro_trabajo"] ?? '';
+    $ubicacion = $_POST["ubicacion_georeferenciada"] ?? '';
+    $poblacion = $_POST["poblacion"] ?? '';
+    $localidad = $_POST["localidad"] ?? '';
+    $estado = $_POST["estado"] ?? '';
+    $tipoInstalacion = $_POST["tipo_instalacion"] ?? '';
 
     try {
         
