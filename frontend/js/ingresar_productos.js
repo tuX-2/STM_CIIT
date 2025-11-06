@@ -225,17 +225,41 @@ function cargarLocalidades() {
 
 function cargarTiposEmbalaje() {
     const tiposEmbalaje = [
-        'Caja de cartón',
-        'Contenedor plástico',
+        'Envase simple',
+        'Envase combinado',
+        'Envase interior',
+        'Envase exterior',
+        'Envase intermedio',
+        'Recipiente intermedio para granel (RIG / IBC)',
+        'Gran embalaje (LP)',
+        'Tambor metálico',
+        'Tambor de plástico',
+        'Bidón metálico',
+        'Bidón de plástico',
         'Caja de madera',
-        'Pallet',
-        'Bolsa',
-        'Tambor',
-        'Bidón',
-        'Saco'
+        'Caja de cartón / fibra',
+        'Caja de plástico',
+        'Caja metálica',
+        'Bolsa de plástico',
+        'Bolsa de papel',
+        'Frasco o botella de vidrio',
+        'Frasco o botella de plástico',
+        'Garrafa o contenedor de vidrio / gres',
+        'Contenedor a presión (cilindro, tanque portátil)',
+        'Embalaje compuesto (varios materiales)',
+        'Embalaje con flejes o ligaduras',
+        'Embalaje interior rígido',
+        'Envase reutilizable o retornable',
+        'Embalaje para cantidades limitadas',
+        'Embalaje para residuos peligrosos',
+        'Embalaje especial para líquidos corrosivos',
+        'Embalaje especial para materiales explosivos'
     ];
     
     const select = document.getElementById('tipo_de_embalaje');
+    // Limpia las opciones existentes antes de agregar las nuevas
+    select.innerHTML = '<option value="">Seleccione un tipo de embalaje</option>';
+    
     tiposEmbalaje.forEach(tipo => {
         const option = document.createElement('option');
         option.value = tipo;
@@ -244,15 +268,30 @@ function cargarTiposEmbalaje() {
     });
 }
 
+
 function cargarTiposMercancia() {
     const tiposMercancia = [
-        'Perecedera',
-        'No perecedera',
-        'Frágil',
-        'Peligrosa',
-        'General',
-        'Congelada',
-        'Refrigerada'
+        'Mercancías peligrosas',
+        'Sustancias peligrosas',
+        'Materiales peligrosos',
+        'Residuos peligrosos',
+        'Mercancías en cantidades limitadas',
+        'Mercancías en cantidades exceptuadas',
+        'Mercancías no peligrosas',
+        'Mercancías comunes / generales',
+        'Mercancías para consumo final',
+        'Mercancías a granel',
+        'Mercancías en envases especiales',
+        'Mercancías transportadas en tanque/autotanque',
+        'Clase 1 - Explosivos',
+        'Clase 2 - Gases',
+        'Clase 3 - Líquidos inflamables',
+        'Clase 4 - Sólidos inflamables / combustión espontánea / reacción con agua',
+        'Clase 5 - Sustancias comburentes y peróxidos orgánicos',
+        'Clase 6 - Sustancias tóxicas e infecciosas',
+        'Clase 7 - Materiales radiactivos',
+        'Clase 8 - Sustancias corrosivas',
+        'Clase 9 - Sustancias peligrosas varias / misceláneas'
     ];
     
     const select = document.getElementById('tipo_de_mercancia');
