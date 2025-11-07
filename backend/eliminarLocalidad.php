@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->beginTransaction();
 
       
-        $sqlDependientes = "DELETE FROM empleados WHERE id_localidad = :id_localidad";
+        $sqlDependientes = "DELETE FROM personal WHERE afiliacion_laboral = :id_localidad";
         $stmtDep = $pdo->prepare($sqlDependientes);
         $stmtDep->execute([':id_localidad' => $id_localidad]);
 

@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
 
-    // Elementos del DOM
+    // --------------------- ELEMENTOS ---------------------
     const inputId = document.getElementById("id_localidad");
     const inputNombre = document.getElementById("nombre_centro_trabajo");
     const inputLocalidad = document.getElementById("localidad");
@@ -12,8 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnEliminar = document.getElementById("btnEliminar");
     const btnCancelar = document.getElementById("btnCancelar");
 
-    const seccionResultados = document.getElementById("resultsSection");
-    const contenedorResultados = document.getElementById("resultsContainer");
     const seccionInfoLocalidad = document.getElementById("localidadInfoSection");
 
     // Campos de información
@@ -31,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --------------------- FUNCIONES ---------------------
 
-    // Mostrar alerta con Swal
     const mostrarAlerta = (titulo, texto, icono = "info") => {
         Swal.fire({
             title: titulo,
@@ -41,7 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    // Limpiar campos y secciones
     const limpiarCampos = () => {
         inputId.value = "";
         inputNombre.value = "";
@@ -49,20 +45,16 @@ document.addEventListener("DOMContentLoaded", () => {
         inputPoblacion.value = "";
         inputEstado.value = "";
 
-        seccionResultados.style.display = "none";
-        contenedorResultados.innerHTML = "";
         seccionInfoLocalidad.style.display = "none";
-
         Object.values(infoCampos).forEach(campo => campo.textContent = "-");
         idLocalidadSeleccionada = null;
         btnEliminar.disabled = true;
     };
 
-    // Mostrar información de la localidad seleccionada
     const mostrarInfoLocalidad = (datos) => {
-        idLocalidadSeleccionada = datos.id;
-        infoCampos.id.textContent = datos.id;
-        infoCampos.nombre.textContent = datos.nombre_centro;
+        idLocalidadSeleccionada = datos.id_localidad;
+        infoCampos.id.textContent = datos.id_localidad;
+        infoCampos.nombre.textContent = datos.nombre_centro || "-";
         infoCampos.ubicacion.textContent = datos.ubicacion || "-";
         infoCampos.poblacion.textContent = datos.poblacion || "-";
         infoCampos.localidad.textContent = datos.localidad || "-";
@@ -75,7 +67,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // --------------------- EVENTOS ---------------------
 
-    // Buscar localidad
     btnBuscar.addEventListener("click", () => {
         const formData = new FormData();
         formData.append("id_localidad", inputId.value);
@@ -84,28 +75,21 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("poblacion", inputPoblacion.value);
         formData.append("estado", inputEstado.value);
 
-        fetch("/backend/eliminarLocalidad.php", {
+        fetch("/backend/buscarLocalidadesEliminar.php", {
             method: "POST",
             body: formData
         })
         .then(respuesta => respuesta.json())
-        .then(datos => {
-            if (datos.length === 0) {
-                mostrarAlerta("Sin resultados", "No se encontraron localidades", "warning");
-                seccionResultados.style.display = "none";
+        .then(data => {
+            if (!data || (Array.isArray(data) && data.length === 0) || data.error) {
+                mostrarAlerta("Sin resultados", data?.error || "No se encontraron localidades", "warning");
+                seccionInfoLocalidad.style.display = "none";
                 return;
             }
 
-            contenedorResultados.innerHTML = "";
-            datos.forEach(localidad => {
-                const div = document.createElement("div");
-                div.classList.add("resultado-item");
-                div.textContent = `${localidad.id} - ${localidad.nombre_centro} (${localidad.localidad})`;
-                div.addEventListener("click", () => mostrarInfoLocalidad(localidad));
-                contenedorResultados.appendChild(div);
-            });
-
-            seccionResultados.style.display = "block";
+            // Si es array, tomar el primer elemento
+            const localidad = Array.isArray(data) ? data[0] : data;
+            mostrarInfoLocalidad(localidad);
         })
         .catch(error => {
             console.error(error);
@@ -113,7 +97,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Limpiar campos
     btnLimpiar.addEventListener("click", () => {
         Swal.fire({
             title: "¿Desea limpiar los datos?",
@@ -126,7 +109,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Cancelar operación
     btnCancelar.addEventListener("click", () => {
         Swal.fire({
             title: "¿Desea salir sin eliminar?",
@@ -140,7 +122,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 
-    // Eliminar localidad
     btnEliminar.addEventListener("click", () => {
         if (!idLocalidadSeleccionada) return mostrarAlerta("Seleccione una localidad", "Debe seleccionar una localidad antes de eliminar", "warning");
 
