@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestión de Localidades</title>
     <link rel="stylesheet" href="./css/panel_general.css">
-    <link rel="stylesheet" href="./css/gestionLocalidades.css">
+    <link rel="stylesheet" href="./css/consultarLocalidad.css">
 </head>
 
 <body>
@@ -16,46 +16,53 @@
 
     <main class="main-content">
         <section class="welcome-section">
-            <h2>Consulta de Localidades</h2>
-            <form action="/backend/consultarLocalidades.php" method="POST" class="grid-container">
+            <h2>Consultar Localidades</h2>
+            <form action="/backend/consultaLocalidades.php" method="POST" class="grid-container" id="formFiltros">
 
-                <div class="form-field">
-                    <label for="curp_personal">CURP del Personal</label>
-                    <input type="text" style="text-transform: uppercase;"
-                        oninput="this.value = this.value.toUpperCase()" id="curp_personal" name="curp_personal" required
-                        placeholder="CURP del personal">
+                <div id="filtros-container">
+                    <!-- Filtros dinámicos se agregarán aquí -->
+                    
                 </div>
 
-                <div class="form-actions">
-                    <button type="submit">Consultar</button>
-                    <button type="reset">Limpiar</button>
-                    <button type="button">Cancelar</button>
-                </div>
+                <button type="button" id="agregarFiltro">+ Agregar filtro</button>
 
+                <div class="buttons">
+                    <button type="submit" class="buscar">Buscar</button>
+                    <button type="button" class="limpiar">Limpiar</button>
+                    <button type="button" class="regresar">Regresar</button>
+                </div>
             </form>
+        </section>
 
-            <div class="content-area active" id="resultado-consulta">
-                <h3>Resultados de la Consulta</h3>
+
+        <section class="resultados-section">
+            <h2>Resultados</h2>
+            <div id="resultados-container">
                 <table>
                     <thead>
                         <tr>
                             <th>Nombre</th>
-                            <th>Apellido Paterno</th>
-                            <th>Apellido Materno</th>
-                            <th>Afiliación Laboral</th>
-                            <th>Cargo</th>
-                            <th>CURP</th>
+                            <th>Ubicación</th>
+                            <th>Población</th>
+                            <th>Estado</th>
+                            <th>Tipo de instalación</th>
                         </tr>
                     </thead>
-                    <tbody id="tabla-resultados">
-                        
+                    <tbody>
+                        <!-- Aquí se agregarán las filas dinámicamente con JavaScript -->
                     </tbody>
                 </table>
             </div>
         </section>
-    </main>
-    <script src="../js/operacionesPersonal.js"></script>
 
+    </main>
+
+
+
+    
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../js/consultarLocalidades.js"></script>
 </body>
 
 </html>

@@ -33,9 +33,13 @@ body {
    CONTENEDOR PRINCIPAL
    ========================== */
 .main-content {
-    padding: 3rem 2rem;
-    max-width: 1400px;
-    margin: 0 auto;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 20px auto 150px auto; /* espacio arriba y abajo */
+    background: #ffffff; /* mantiene blanco */
+    border-radius: 12px;
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+
 }
 
 /* ==========================
@@ -214,11 +218,11 @@ body {
 }
 
 /* ==========================
-   FORMULARIO EN DOS COLUMNAS
+   FORMULARIO EN COLUMNAS
    ========================== */
 .form-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Dos columnas iguales */
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
     border: 2px solid #000000;
     padding: 2rem;

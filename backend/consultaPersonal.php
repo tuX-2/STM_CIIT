@@ -8,16 +8,32 @@
             if ($curp) {
             // Consulta filtrada por CURP con LIKE para búsqueda parcial
             $stmt = $pdo->prepare("
-                SELECT nombre_personal, apellido_paterno, apellido_materno, afiliacion_laboral AS nombre_centro_trabajo, cargo, curp
+                SELECT 
+                    personal.nombre_personal, 
+                    personal.apellido_paterno, 
+                    personal.apellido_materno, 
+                    localidades.nombre_centro_trabajo, 
+                    personal.cargo, 
+                    personal.curp
                 FROM personal
-                WHERE curp LIKE :curp
+                JOIN localidades
+                    ON personal.afiliacion_laboral = localidades.id_localidad
+                WHERE personal.curp LIKE :curp
             ");
             $stmt->execute([':curp' => $curp . '%']); // % permite que coincida cualquier cosa después del texto
         } else {
             // Consulta general (todos los registros)
             $stmt = $pdo->query("
-                SELECT nombre_personal, apellido_paterno, apellido_materno, afiliacion_laboral AS nombre_centro_trabajo, cargo, curp
+                SELECT 
+                    personal.nombre_personal, 
+                    personal.apellido_paterno, 
+                    personal.apellido_materno, 
+                    localidades.nombre_centro_trabajo, 
+                    personal.cargo, 
+                    personal.curp
                 FROM personal
+                JOIN localidades
+                    ON personal.afiliacion_laboral = localidades.id_localidad
             ");
         }
 

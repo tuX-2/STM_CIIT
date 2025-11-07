@@ -1,0 +1,304 @@
+/* ============================
+   GENERAL
+============================ */
+body {
+    font-family: "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    background-color: #f3f3f3;
+}
+
+/* Centrado del contenido principal */
+.main-content {
+    display: flex;
+    flex-direction: column; /* vertical */
+    align-items: center; /* centrado horizontal */
+    padding: 40px 20px;
+    gap: 30px; /* separación vertical entre secciones */
+}
+
+/* ============================
+   HEADER
+============================ */
+.header {
+    background: #000000;
+    color: #ffffff;
+    padding: 1.5rem 2rem;
+    border-bottom: 3px solid #ffffff;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 1.5rem;
+    font-weight: 300;
+    letter-spacing: 1px;
+    margin: 0;
+}
+
+/* ============================
+   SECCIÓN TIPO TARJETA (Formulario)
+============================ */
+.welcome-section {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 800px;         /* más ancho para que las columnas no se vean apretadas */
+    padding: 30px 25px;
+    display: flex;
+    flex-direction: column;   /* permite crecer con el contenido */
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.welcome-section:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.welcome-section h2 {
+    text-align: center;
+    color: #333;
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 1.5rem;
+}
+
+/* ============================
+   FORMULARIO
+============================ */
+.grid-container {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+/* Etiquetas y campos */
+label {
+    display: block;
+    font-weight: 700;
+    color: #000000;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+}
+
+select,
+input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fafafa;
+    font-size: 14px;
+}
+
+/* ============================
+   BOTONES PRINCIPALES
+============================ */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+button {
+    flex: 1;
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.25s ease, transform 0.1s ease;
+}
+
+.buscar {
+    background-color: #000000;
+    color: #fff;
+}
+
+.limpiar {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.regresar {
+    background-color: #ff5a5a;
+    color: #fff;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+/* ============================
+   BOTÓN AGREGAR FILTRO
+============================ */
+#agregarFiltro {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+    background-color: #000000;
+    color: #fff;
+    margin-bottom: 12px;
+    transition: background-color 0.25s ease, transform 0.1s ease;
+}
+
+#agregarFiltro:active {
+    transform: scale(0.98);
+}
+
+/* ============================
+   FILTROS DINÁMICOS
+============================ */
+/* Ajustes para mantener el botón eliminar pequeño y alineado */
+.filtro-dinamico {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 12px;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+    position: relative; /* importante para posicionar el botón */
+}
+
+.filtro-dinamico select,
+.filtro-dinamico input[type="text"] {
+    width: 100%;
+    padding: 8px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.filtro-dinamico select:focus,
+.filtro-dinamico input[type="text"]:focus {
+    border-color: #000000;
+    box-shadow: 0 0 0 3px rgba(0, 120, 215, 0.2);
+    outline: none;
+}
+
+/* ============================
+   BOTÓN ELIMINAR FILTRO
+============================ */
+
+
+/* Agrupa select + input para mantener botón aparte */
+.campos-filtro {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* Evita que el botón crezca */
+.eliminar-filtro {
+    align-self: flex-end;
+    background-color: #ff5a5a;
+    color: #fff;
+    padding: 4px 8px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    width: auto;
+}
+
+
+.eliminar-filtro:hover {
+    background-color: #e04444;
+}
+
+
+/* ============================
+   CONTENEDOR DE FILTROS
+============================ */
+#filtros-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+}
+
+/* Cada filtro ocupa 100% por defecto */
+.filtro-dinamico {
+    flex: 1 1 100%;       /* 1 filtro → ocupa todo el ancho */
+    min-width: 200px;     /* evita que se achique demasiado */
+}
+
+/* A partir del segundo filtro se distribuyen en columnas */
+#filtros-container > .filtro-dinamico:nth-child(n+2) {
+    flex: 1 1 45%;        /* dos columnas aproximadas */
+}
+
+
+/* ============================
+   RESULTADOS / TABLA
+============================ */
+.resultados-section {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 800px;
+    padding: 20px;
+}
+
+.resultados-section h2 {
+    text-align: center;
+    margin-top: 0;
+    color: #333;
+}
+
+#resultados-container table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#resultados-container th,
+#resultados-container td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+#resultados-container th {
+    background-color: #f0f0f0;
+    font-weight: 600;
+}
+
+#resultados-container tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+#resultados-container {
+    overflow-x: auto;  /* permite scroll horizontal en móviles */
+    -webkit-overflow-scrolling: touch; /* suaviza el scroll en iOS */
+}
+
+/* Opcional: tabla para que no se rompa */
+#resultados-container table {
+    width: 100%;
+    min-width: 600px; /* ancho mínimo para que columnas no se amontonen */
+    border-collapse: collapse;
+}
+/* ============================
+   RESPONSIVE
+============================ */
+@media (max-width: 600px) {
+    .welcome-section,
+    .resultados-section {
+        max-width: 100%;
+        padding: 20px;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .buttons button {
+        width: 100%;
+    }
+}

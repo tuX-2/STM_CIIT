@@ -14,15 +14,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     try {
         // Verificar si ya existe el centro de trabajo con el mismo nombre
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM localidades WHERE nombre_centro_trabajo = :nombre");
-        $stmt->execute([':nombre' => $nombreCentro]);
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM localidades WHERE ubicacion_georeferenciada = :ubicacion");
+        $stmt->execute([':ubicacion' => $ubicacion]);
         $existe = $stmt->fetchColumn();
 
         if ($existe > 0) {
             http_response_code(400);
             echo json_encode([
                 "success" => false,
-                "error" => "El nombre del centro de trabajo ya está registrado."
+                "error" => "La ubicación del centro de trabajo ya está registrado."
             ]);
             exit;
         }
