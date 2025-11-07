@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar Localidades</title>
+    <title>Gestión de Localidades</title>
     <link rel="stylesheet" href="./css/eliminarLocalidades.css">
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <!-- Header Principal -->
     <header class="main-header">
-        <h1>Sistema de Gestión Logística</h1>
+        <h1>Gestión de Localidades</h1>
     </header>
 
     <!-- Subheader -->
@@ -97,11 +99,8 @@
             </div>
         </section>
 
-        <!-- Mensaje de alerta -->
-        <div id="alertMessage" class="alert"></div>
-
         <!-- Sección de Resultados (Inicialmente oculta) -->
-        <section id="resultsSection" class="results-section">
+        <section id="resultsSection" class="results-section" style="display:none;">
             <h3>Resultados de la Búsqueda</h3>
             <div id="resultsContainer" class="results-container">
                 <!-- Los resultados se cargarán dinámicamente aquí -->
@@ -109,7 +108,7 @@
         </section>
 
         <!-- Información de la Localidad (Inicialmente oculta) -->
-        <section id="localidadInfoSection" class="localidad-info-section">
+        <section id="localidadInfoSection" class="localidad-info-section" style="display:none;">
             <div class="info-box">
                 <h3>Información de la Localidad Seleccionada</h3>
                 <div class="info-grid">
@@ -161,57 +160,7 @@
         </section>
     </div>
 
-    <!-- Modal de Confirmación de Eliminación -->
-    <div id="confirmModal" class="modal">
-        <div class="modal-content">
-            <h3>Confirmar Eliminación</h3>
-            <p>¿Está seguro de que desea eliminar la localidad:</p>
-            <p class="modal-highlight"><strong id="modal_nombre_localidad"></strong>?</p>
-            <p class="modal-warning">Esta acción no se puede deshacer.</p>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-danger" id="btnConfirmarEliminar">
-                    Confirmar Eliminación
-                </button>
-                <button type="button" class="btn btn-secondary" id="btnCancelarModal">
-                    Cancelar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Confirmación de Limpiar -->
-    <div id="limpiarModal" class="modal">
-        <div class="modal-content">
-            <h3>Confirmar Limpieza</h3>
-            <p>¿Desea limpiar los datos mostrados?</p>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-primary" id="btnConfirmarLimpiar">
-                    Confirmar
-                </button>
-                <button type="button" class="btn btn-secondary" id="btnCancelarLimpiar">
-                    Cancelar
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Confirmación de Cancelar -->
-    <div id="cancelarModal" class="modal">
-        <div class="modal-content">
-            <h3>Confirmar Salida</h3>
-            <p>¿Está seguro de que desea salir sin eliminar?</p>
-            <p>Se perderán los datos cargados.</p>
-            <div class="modal-actions">
-                <button type="button" class="btn btn-primary" id="btnConfirmarCancelar">
-                    Sí, salir
-                </button>
-                <button type="button" class="btn btn-secondary" id="btnNoSalir">
-                    No, permanecer
-                </button>
-            </div>
-        </div>
-    </div>
-
+    <!-- JS -->
     <script src="./js/eliminarLocalidades.js"></script>
 </body>
 </html>

@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Localidades</title>
+    <title>Actualización de Localidades</title>
     <link rel="stylesheet" href="./css/panel_general.css">
-    <link rel="stylesheet" href="./css/gestionLocalidades.css">
-
+    <link rel="stylesheet" href="./css/actualizarLocalidades.css">
 </head>
 
 <body>
@@ -17,82 +16,113 @@
 
     <main class="main-content">
 
-        <!-- REGISTRO DE LOCALIDADES-->
+        <!-- BÚSQUEDA DE LOCALIDADES -->
         <section class="welcome-section">
-            <h2>Registro de Localidades</h2>
-            <form id="formRegistrarPersonal" class="grid-container">
+            <h2>Búsqueda de Localidades</h2>
 
-                <!-- Nombre del Centro de Trabajo-->
+            <div class="search-container">
                 <div class="form-field">
-                    <label for="nombre_centro_trabajo">Nombre del Centro de Trabajo</label>
-                    <input type="text" id="nombre_centro_trabajo" name="nombre_centro_trabajo" required
-                        pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$" placeholder="Ej. PUBIS puebla"
-                        title="Solo letras">
+                    <label for="buscar_nombre_localidad">Nombre de la localidad</label>
+                    <input type="text" id="buscar_nombre_localidad" name="buscar_nombre_localidad"
+                        placeholder="Ingrese nombre de la localidad" title="Ingrese el nombre para buscar">
+                </div>
+                <div class="form-actions">
+                    <button type="button" id="btnBuscar">Buscar</button>
+                </div>
+            </div>
+
+            <div id="mensaje-busqueda"></div>
+        </section>
+
+        <!-- ACTUALIZACIÓN DE LOCALIDADES -->
+        <section class="welcome-section" id="seccion-formulario" style="display: none;">
+            <h2>Datos de la Localidad</h2>
+            <form id="formActualizarLocalidad" class="grid-container">
+
+                <!-- ID Localidad (Solo Lectura) -->
+                <div class="form-field">
+                    <label for="id_localidad">ID Localidad</label>
+                    <input type="text" id="id_localidad" name="id_localidad" readonly
+                        style="background-color: #e9ecef; cursor: not-allowed;">
                 </div>
 
-                <!-- Ubicación Georeferenciada (coordenadas) -->
+                <!-- Nombre del Centro de Trabajo -->
                 <div class="form-field">
-                    <label for="ubicacion_georeferenciada">Ubicación Georeferenciada (Latitud, Longitud)</label>
+                    <label for="nombre_centro_trabajo">Nombre del Centro de Trabajo *</label>
+                    <input type="text" id="nombre_centro_trabajo" name="nombre_centro_trabajo" required
+                        pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$" placeholder="Ej. PUBIS Puebla"
+                        title="Solo letras" maxlength="100" disabled>
+                    <span class="error-message" id="error_nombre_centro_trabajo"></span>
+                </div>
+
+                <!-- Ubicación Georeferenciada -->
+                <div class="form-field">
+                    <label for="ubicacion_georeferenciada">Ubicación Georeferenciada (Latitud, Longitud) *</label>
                     <input type="text" id="ubicacion_georeferenciada" name="ubicacion_georeferenciada" required
                         pattern="^-?\d{1,2}\.\d+,\s*-?\d{1,3}\.\d+$" placeholder="Ej. 19.4326, -99.1332"
-                        title="Formato: latitud, longitud (Ej. 19.4326, -99.1332)">
+                        title="Formato: latitud, longitud" disabled>
+                    <span class="error-message" id="error_ubicacion_georeferenciada"></span>
                 </div>
-
 
                 <!-- Población -->
                 <div class="form-field">
-                    <label for="poblacion">Poblacion</label>
-                    <input type="text" id="poblacion" name="poblacion" pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$"
-                        placeholder="Ej. San Luis Rio Colorado" title="Solo letras">
+                    <label for="poblacion">Población *</label>
+                    <input type="text" id="poblacion" name="poblacion" required
+                        pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$" placeholder="Ej. San Luis Rio Colorado"
+                        title="Solo letras" maxlength="100" disabled>
+                    <span class="error-message" id="error_poblacion"></span>
                 </div>
 
                 <!-- Localidad -->
                 <div class="form-field">
-                    <label for="localidad">Localidad</label>
-                    <input type="text" id="localidad" name="localidad" pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$"
-                        placeholder="Ej. " title="Solo letras">
+                    <label for="localidad">Localidad *</label>
+                    <input type="text" id="localidad" name="localidad" required
+                        pattern="^(?=.*[A-Za-zÀ-ÿÑñ])[A-Za-zÀ-ÿÑñ\s\-]+$" placeholder="Ej. Centro" title="Solo letras"
+                        maxlength="100" disabled>
+                    <span class="error-message" id="error_localidad"></span>
                 </div>
 
                 <!-- Estado -->
                 <div class="form-field">
-                    <label for="estado">Estado</label>
-                    <select id="estado" name="estado" required>
+                    <label for="estado">Estado *</label>
+                    <select id="estado" name="estado" required disabled>
                         <option value="">Seleccione un estado</option>
                     </select>
+                    <span class="error-message" id="error_estado"></span>
                 </div>
 
+                <!-- Tipo de Instalación -->
                 <div class="form-field">
-                    <label for="tipo_instalacion">Tipo de Instalación</label>
-                    <select id="tipo_instalacion" name="tipo_instalacion" required>
+                    <label for="tipo_instalacion">Tipo de Instalación *</label>
+                    <select id="tipo_instalacion" name="tipo_instalacion" required disabled>
                         <option value="">Seleccione un Tipo de Instalación</option>
                         <option value="Centro Productivo">Centro Productivo</option>
                         <option value="Centro de Distribución">Centro de Distribución</option>
-                        <option value="PODEBIS, Almacen">PODEBIS, Almacen</option>
-                    </select>
+                        <option value="PODEBI">PODEBI</option>
+                        <option value="Almacen">Almacen</option></select>
+                    <span class="error-message" id="error_tipo_instalacion"></span>
                 </div>
 
-
+                <!-- Botones de Acción -->
                 <div class="form-actions" style="grid-column: 1 / -1; justify-content: center;">
-                    <button type="submit">Guardar</button>
+                    <button type="button" id="btnActualizar" disabled>Actualizar</button>
+                    <button type="button" id="btnLimpiar" disabled>Limpiar</button>
                     <button type="button" id="btnCancelar">Cancelar</button>
                 </div>
 
-
             </form>
-            <div id="mensaje-registro"></div>
-
+            <div id="mensaje-actualizacion"></div>
         </section>
     </main>
 
-    <script src="../js/operacionesPersonal.js"></script>
-    <script src="../js/estados.js"></script>
-
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script type="module">
-        import { configurarBotonCancelar } from '../js/cancelar.js';
-        configurarBotonCancelar('btnCancelar', 'panel_general.html');
-    </script>
+
+    <!-- Script de Estados -->
+    <script src="../js/estados.js"></script>
+
+    <!-- Script Principal de Actualización -->
+    <script src="../js/actualizarLocalidades.js"></script>
 
 </body>
 
