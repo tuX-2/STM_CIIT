@@ -1,159 +1,136 @@
 const form = document.getElementById('registerForm');
-const username = document.getElementById('username');
-const email = document.getElementById('email');
-const personalId = document.getElementById('personalId');
-const password = document.getElementById('password');
-const confirmPassword = document.getElementById('confirmPassword');
+const inputs = {
+    username: document.getElementById('username'),
+    email: document.getElementById('email'),
+    personalId: document.getElementById('personalId'),
+    password: document.getElementById('password'),
+    confirmPassword: document.getElementById('confirmPassword')
+};
 const successMessage = document.getElementById('successMessage');
 
-function showError(input, message) {
+// ---------- Funciones auxiliares ----------
+const showError = (input, message) => {
     const errorDiv = document.getElementById(input.id + 'Error');
     errorDiv.textContent = message;
     errorDiv.classList.add('show');
     input.classList.add('error');
-}
+};
 
-function clearError(input) {
+const clearError = input => {
     const errorDiv = document.getElementById(input.id + 'Error');
+    errorDiv.textContent = '';
     errorDiv.classList.remove('show');
     input.classList.remove('error');
-}
+};
 
-function validateEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
+const validateEmail = email => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+const validateUsername = name => /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]{0,98}$/.test(name);
 
-function validateUsername(name) {
-    // Verificar que solo contenga letras y espacios
-    const nameRegex = /^[A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]*$/;
-    return nameRegex.test(name);
-}
-
-function validatePassword(pass) {
-    // Al menos 8 caracteres, una mayúscula, una minúscula, un número y un símbolo especial
-    const minLength = pass.length >= 8;
-    const hasUpperCase = /[A-Z]/.test(pass);
-    const hasLowerCase = /[a-z]/.test(pass);
-    const hasNumber = /[0-9]/.test(pass);
-    const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pass);
-
-    return {
-        isValid: minLength && hasUpperCase && hasLowerCase && hasNumber && hasSpecialChar,
-        minLength,
-        hasUpperCase,
-        hasLowerCase,
-        hasNumber,
-        hasSpecialChar
-    };
-}
-
-function validateForm() {
-    let isValid = true;
-
-    // Limpiar errores previos
-    [username, email, personalId, password, confirmPassword].forEach(clearError);
-
-    // Validar nombre de usuario
-    if (username.value.trim() === '') {
-        showError(username, 'El nombre de usuario es requerido');
-        isValid = false;
-    } else if (!validateUsername(username.value.trim())) {
-        showError(username, 'El nombre debe contener solo letras y comenzar con mayúscula');
-        isValid = false;
-    } else if (username.value.length < 4) {
-        showError(username, 'El nombre de usuario debe tener al menos 4 caracteres');
-        isValid = false;
-    }
-
-    // Validar email
-    if (email.value.trim() === '') {
-        showError(email, 'El correo electrónico es requerido');
-        isValid = false;
-    } else if (!validateEmail(email.value)) {
-        showError(email, 'Ingrese un correo electrónico válido');
-        isValid = false;
-    }
-
-    // Validar clave de identificación
-    if (personalId.value.trim() === '') {
-        showError(personalId, 'La clave de identificación es requerida');
-        isValid = false;
-    }
-
-    // Validar contraseña
-    const passwordValidation = validatePassword(password.value);
-    if (password.value === '') {
-        showError(password, 'La contraseña es requerida');
-        isValid = false;
-    } else if (!passwordValidation.isValid) {
-        let errorMsg = 'La contraseña debe contener: ';
-        let requirements = [];
-        if (!passwordValidation.minLength) requirements.push('8 caracteres');
-        if (!passwordValidation.hasUpperCase) requirements.push('mayúscula');
-        if (!passwordValidation.hasLowerCase) requirements.push('minúscula');
-        if (!passwordValidation.hasNumber) requirements.push('número');
-        if (!passwordValidation.hasSpecialChar) requirements.push('símbolo especial');
-        errorMsg += requirements.join(', ');
-        showError(password, errorMsg);
-        isValid = false;
-    }
-
-    // Validar confirmación de contraseña
-    if (confirmPassword.value === '') {
-        showError(confirmPassword, 'Debe confirmar la contraseña');
-        isValid = false;
-    } else if (password.value !== confirmPassword.value) {
-        showError(confirmPassword, 'Las contraseñas no coinciden');
-        isValid = false;
-    }
-
-    return isValid;
-}
-
-document.getElementById("registerForm").addEventListener("submit", async (e) => {
-    e.preventDefault(); // evita el envío tradicional
-
-    const formData = new FormData();
-    formData.append("nombre_usuario", document.getElementById("username").value);
-    formData.append("correo", document.getElementById("email").value);
-    formData.append("clave_personal", document.getElementById("personalId").value);
-    formData.append("contrasena", document.getElementById("password").value);
-    formData.append("confirmar_contrasena", document.getElementById("confirmPassword").value);
-
-    try {
-
-        const response = await fetch("/../backend/registrar_usuario.php", {
-            method: "POST",
-            body: formData,
-        });
-
-        const text = await response.text();
-
-        const messageBox = document.getElementById("successMessage");
-        messageBox.style.backgroundColor = (text === "Usuario registrado exitosamente.") ? "#4caf50" : "#f32b2bff";
-        // Mostrar mensaje en pantalla
-        messageBox.style.display = "block";
-        messageBox.innerText = (text === "Usuario registrado exitosamente.") ? text + " Por favor vuelva a iniciar sesión como usuario." : text;
-
-        // Regresar a la vista de Login si se hizo correctamente el registro del usuario.
-        if (text === "Usuario registrado exitosamente.") {
-            setTimeout(function () {
-            window.location.href = "/../index.html";
-        }, 2000);
-        }
-
-    } catch (error) {
-        console.error("Error:", error);
-    }
+const validatePassword = pass => ({
+    minLength: pass.length >= 8,
+    hasUpperCase: /[A-Z]/.test(pass),
+    hasLowerCase: /[a-z]/.test(pass),
+    hasNumber: /[0-9]/.test(pass),
+    hasSpecialChar: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(pass)
 });
 
+// ---------- Validaciones individuales ----------
+function checkUsername() {
+    const val = inputs.username.value.trim();
+    clearError(inputs.username);
+    if (!val) return showError(inputs.username, 'El nombre de usuario es requerido');
+    if (!validateUsername(val)) return showError(inputs.username, 'Debe iniciar con mayúscula, solo letras y sin espacios');
+    if (val.length < 4) return showError(inputs.username, 'Debe tener al menos 4 caracteres');
+    if (val.length > 100) return showError(inputs.username, 'El nombre de usuario no debe de exceder 100 caracteres');
+}
 
-// Limpiar errores al escribir
-[username, email, personalId, password, confirmPassword].forEach(input => {
-    input.addEventListener('input', function () {
-        if (this.value.trim() !== '') {
-            clearError(this);
-        }
-    });
+function checkEmail() {
+    const val = inputs.email.value.trim();
+    clearError(inputs.email);
+    if (!val) return showError(inputs.email, 'El correo electrónico es requerido');
+    if (val.length > 150) return showError(inputs.username, 'El correo no debe de exceder 150 caracteres');
+    if (!validateEmail(val)) return showError(inputs.email, 'Ingrese un correo electrónico válido');
+}
+
+function checkPersonalId() {
+    const val = inputs.personalId.value.trim();
+    clearError(inputs.personalId);
+    if (!val) return showError(inputs.personalId, 'La clave de identificación es requerida');
+}
+
+function checkPassword() {
+    const val = inputs.password.value;
+    clearError(inputs.password);
+    if (val.length > 100) return showError(inputs.username, 'La contraseña no debe de exceder 100 caracteres');
+    if (!val) return showError(inputs.password, 'La contraseña es requerida');
+
+    const p = validatePassword(val);
+    const requirements = [];
+    if (!p.minLength) requirements.push('8 caracteres');
+    if (!p.hasUpperCase) requirements.push('mayúscula');
+    if (!p.hasLowerCase) requirements.push('minúscula');
+    if (!p.hasNumber) requirements.push('número');
+    if (!p.hasSpecialChar) requirements.push('símbolo especial');
+
+    if (requirements.length)
+        showError(inputs.password, 'Debe contener: ' + requirements.join(', '));
+}
+
+function checkConfirmPassword() {
+    clearError(inputs.confirmPassword);
+    if (!inputs.confirmPassword.value)
+        return showError(inputs.confirmPassword, 'Debe confirmar la contraseña');
+    if (inputs.confirmPassword.value !== inputs.password.value)
+        return showError(inputs.confirmPassword, 'Las contraseñas no coinciden');
+}
+
+// ---------- Validación global ----------
+function validateForm() {
+    checkUsername();
+    checkEmail();
+    checkPersonalId();
+    checkPassword();
+    checkConfirmPassword();
+
+    return !document.querySelector('.error'); // true si no hay errores
+}
+
+// ---------- Validaciones en tiempo real ----------
+const handlers = {
+    username: checkUsername,
+    email: checkEmail,
+    personalId: checkPersonalId,
+    password: checkPassword,
+    confirmPassword: checkConfirmPassword
+};
+
+Object.keys(inputs).forEach(key => {
+    inputs[key].addEventListener('input', handlers[key]);
+});
+
+// ---------- Envío del formulario ----------
+form.addEventListener('submit', async e => {
+    e.preventDefault();
+    if (!validateForm()) return;
+
+    const formData = new FormData(form);
+
+    try {
+        const response = await fetch('/../backend/registrar_usuario.php', {
+            method: 'POST',
+            body: formData
+        });
+        const text = await response.text();
+        const success = text === 'Usuario registrado exitosamente.';
+
+        successMessage.style.backgroundColor = success ? '#4caf50' : '#f32b2bff';
+        successMessage.style.display = 'block';
+        successMessage.textContent = success
+            ? text + ' Por favor vuelva a iniciar sesión como usuario.'
+            : text;
+
+        if (success) setTimeout(() => (window.location.href = '/../index.html'), 2000);
+    } catch (err) {
+        console.error('Error:', err);
+    }
 });

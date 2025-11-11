@@ -19,31 +19,31 @@
 
             <form id="registerForm" novalidate>
                 <div class="input-group">
-                    <input type="text" id="username" required />
+                    <input type="text" id="username" maxlength="100" name="nombre_usuario" required />
                     <label for="username">Nombre de Usuario</label>
                     <div class="error-message" id="usernameError"></div>
                 </div>
 
                 <div class="input-group">
-                    <input type="email" id="email" required />
+                    <input type="email" id="email" maxlength="150" name="correo" required />
                     <label for="email">Correo Electrónico</label>
                     <div class="error-message" id="emailError"></div>
                 </div>
 
                 <div class="input-group">
-                    <input type="text" id="personalId" required />
+                    <input type="text" id="personalId" name="clave_personal" required />
                     <label for="personalId">Clave de Identificación de Personal</label>
                     <div class="error-message" id="personalIdError"></div>
                 </div>
 
                 <div class="input-group">
-                    <input type="password" id="password" required />
+                    <input type="password" id="password" maxlength="100" name="contrasena" required />
                     <label for="password">Contraseña</label>
                     <div class="error-message" id="passwordError"></div>
                 </div>
 
                 <div class="input-group">
-                    <input type="password" id="confirmPassword" required />
+                    <input type="password" id="confirmPassword" maxlength="100" name="confirmar_contrasena" required />
                     <label for="confirmPassword">Confirmar Contraseña</label>
                     <div class="error-message" id="confirmPasswordError"></div>
                 </div>
