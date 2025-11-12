@@ -36,7 +36,7 @@ main.main-content {
     border-radius: 8px;
     padding: 1.5rem 2rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .welcome-section h2 {
@@ -65,7 +65,7 @@ main.main-content {
     margin-bottom: 0.5rem;
     font-weight: 600;
     text-align: left;
-    
+
 }
 
 .form-field input,
@@ -87,7 +87,7 @@ main.main-content {
 .form-field select:focus {
     outline: none;
     border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
 /* Mensajes de error */
@@ -151,19 +151,25 @@ button#btnCancelar {
     flex-wrap: wrap;
     gap: 1rem;
     align-items: flex-end;
-    justify-content: center; /* Centra el campo y botón */
+    justify-content: center;
+    /* Centra el campo y botón */
 }
 
 .search-container .form-field {
-    flex: 0 0 auto; /* Tamaño fijo, no expande */
+    flex: 0 0 auto;
+    /* Tamaño fijo, no expande */
 }
 
 /* Campo de búsqueda más pequeño */
 #buscar_id_localidad {
-    width: 220px;           /* ancho compacto */
-    font-size: 0.85rem;     /* texto más pequeño */
-    padding: 0.35rem 0.5rem; /* padding más pequeño */
-    text-align: center;     /* opcional */
+    width: 220px;
+    /* ancho compacto */
+    font-size: 0.85rem;
+    /* texto más pequeño */
+    padding: 0.35rem 0.5rem;
+    /* padding más pequeño */
+    text-align: center;
+    /* opcional */
 }
 
 /* Mensajes de búsqueda o actualización */
@@ -172,6 +178,24 @@ button#btnCancelar {
     margin-top: 1rem;
     font-size: 0.95rem;
 }
+
+.campo-invalido {
+    border: 2px solid red !important;
+    /* solo borde rojo */
+    background-color: inherit;
+    /* mantiene el fondo normal */
+}
+
+
+.error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 4px;
+    display: block;
+}
+
+
+
 
 /* ---------------------------
    RESPONSIVE
@@ -187,6 +211,7 @@ button#btnCancelar {
     }
 
     #buscar_id_localidad {
-        width: 100%; /* ocupa todo en móvil */
+        width: 100%;
+        /* ocupa todo en móvil */
     }
 }

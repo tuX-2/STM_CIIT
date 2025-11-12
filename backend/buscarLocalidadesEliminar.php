@@ -10,6 +10,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $poblacion = trim($_POST["poblacion"] ?? '');
         $estado = trim($_POST["estado"] ?? '');
 
+        // 🚨 Validar que haya al menos un campo lleno
+        if (
+            $idLocalidad === '' &&
+            $nombreCentro === '' &&
+            $localidad === '' &&
+            $poblacion === '' &&
+            $estado === ''
+        ) {
+            echo json_encode(['error' => 'Debe ingresar al menos un filtro de búsqueda']);
+            exit;
+        }
+
         // Construir query dinámicamente
         $sql = "SELECT 
                     id_localidad,
