@@ -14,7 +14,7 @@ CREATE TABLE personal (
     nombre_personal VARCHAR(100),
     apellido_paterno VARCHAR(100),
     apellido_materno VARCHAR(100),
-    afiliacion_laboral INT REFERENCES localidades(id_localidad),
+    afiliacion_laboral INT REFERENCES localidades(id_localidad) ON DELETE CASCADE,
     cargo VARCHAR(50) CHECK (cargo IN 
         ('Autoridad', 'Administrador del TMS', 'Operador Logístico','Cliente' ,'Jefe de Almacén')),
     curp VARCHAR(18)

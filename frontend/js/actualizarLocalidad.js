@@ -210,9 +210,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // ---------------------------
     // VALIDACIÓN EN TIEMPO REAL
     // ---------------------------
-    //formulario.querySelectorAll('input[required], select[required]').forEach(campo => {
-    //    campo.addEventListener('input', () => validarCampo(campo));
-    //});
+    formulario.querySelectorAll('input[required], select[required]').forEach(campo => {
+        campo.addEventListener('input', () => validarCampo(campo));
+    });
 
     // Inicialmente deshabilitar campos
     deshabilitarCampos();

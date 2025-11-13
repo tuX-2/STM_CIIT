@@ -132,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         Swal.fire({
             title: "Confirmar eliminación",
-            text: `¿Está seguro de eliminar la localidad "${infoCampos.nombre.textContent}"?`,
+            text: `¿Está seguro de eliminar la localidad, se eliminaran los resgistros asociados a esta localidad "${infoCampos.nombre.textContent}"?`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Sí, eliminar",
