@@ -340,6 +340,9 @@ function validarFormulario() {
     if (nombreProducto === '') {
         mostrarError('nombre_producto', 'El nombre del producto es obligatorio.');
         esValido = false;
+    } else if (nombreProducto.length > 99) {
+        mostrarError('nombre_producto', 'El nombre del producto no debe sobrepasar los 100 caracteres.');
+        esValido = false;
     } else if (!/^[a-zA-Z0-9\sáéíóúÁÉÍÓÚñÑ]+$/.test(nombreProducto)) {
         mostrarError('nombre_producto', 'Debe ingresar un nombre de producto válido.');
         esValido = false;
