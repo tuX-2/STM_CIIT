@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__ . '/config/conexion.php'; // Ajusta la ruta si es necesario
+require_once __DIR__ . '/config/conexion.php'; // Ajusta la ruta según tu estructura
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -13,12 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     try {
         $pdo->beginTransaction();
 
-      
-        $sqlDependientes = "DELETE FROM personal WHERE afiliacion_laboral = :id_localidad";
-        $stmtDep = $pdo->prepare($sqlDependientes);
-        $stmtDep->execute([':id_localidad' => $id_localidad]);
-
-        // Eliminar la localidad
+        // Eliminar directamente la localidad
         $sqlLocalidad = "DELETE FROM localidades WHERE id_localidad = :id_localidad";
         $stmtLoc = $pdo->prepare($sqlLocalidad);
         $stmtLoc->execute([':id_localidad' => $id_localidad]);

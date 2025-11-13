@@ -4,7 +4,7 @@ require_once __DIR__ . '/config/conexion.php';
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     try {
-        // Recibir el nombre de localidad (corregir el nombre del parámetro)
+        // Recibir el nombre de localidad 
         $nombreLocalidad = trim($_POST["buscar_nombre_localidad"] ?? '');
 
         if (!$nombreLocalidad) {

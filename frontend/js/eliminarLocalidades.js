@@ -68,6 +68,11 @@ document.addEventListener("DOMContentLoaded", () => {
     // --------------------- EVENTOS ---------------------
 
     btnBuscar.addEventListener("click", () => {
+         // Si el formulario tiene campos requeridos o con pattern:
+        if (!btnBuscar.checkValidity()) {
+            btnBuscar.reportValidity(); // <- Muestra visualmente los errores
+            return; // Evita el fetch si hay errores
+        }
         const formData = new FormData();
         formData.append("id_localidad", inputId.value);
         formData.append("nombre_centro_trabajo", inputNombre.value);
@@ -79,22 +84,22 @@ document.addEventListener("DOMContentLoaded", () => {
             method: "POST",
             body: formData
         })
-        .then(respuesta => respuesta.json())
-        .then(data => {
-            if (!data || (Array.isArray(data) && data.length === 0) || data.error) {
-                mostrarAlerta("Sin resultados", data?.error || "No se encontraron localidades", "warning");
-                seccionInfoLocalidad.style.display = "none";
-                return;
-            }
+            .then(respuesta => respuesta.json())
+            .then(data => {
+                if (!data || (Array.isArray(data) && data.length === 0) || data.error) {
+                    mostrarAlerta("Sin resultados", data?.error || "No se encontraron localidades", "warning");
+                    seccionInfoLocalidad.style.display = "none";
+                    return;
+                }
 
-            // Si es array, tomar el primer elemento
-            const localidad = Array.isArray(data) ? data[0] : data;
-            mostrarInfoLocalidad(localidad);
-        })
-        .catch(error => {
-            console.error(error);
-            mostrarAlerta("Error", "Ocurrió un error al buscar localidades", "error");
-        });
+                // Si es array, tomar el primer elemento
+                const localidad = Array.isArray(data) ? data[0] : data;
+                mostrarInfoLocalidad(localidad);
+            })
+            .catch(error => {
+                console.error(error);
+                mostrarAlerta("Error", "Ocurrió un error al buscar localidades", "error");
+            });
     });
 
     btnLimpiar.addEventListener("click", () => {
@@ -127,7 +132,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         Swal.fire({
             title: "Confirmar eliminación",
-            text: `¿Está seguro de eliminar la localidad "${infoCampos.nombre.textContent}"?`,
+            text: `¿Está seguro de eliminar la localidad, se eliminaran los resgistros asociados a esta localidad "${infoCampos.nombre.textContent}"?`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonText: "Sí, eliminar",
@@ -142,15 +147,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "POST",
                 body: formData
             })
-            .then(respuesta => respuesta.json())
-            .then(res => {
-                mostrarAlerta(res.exito ? "Eliminado" : "Error", res.mensaje, res.exito ? "success" : "error");
-                if (res.exito) limpiarCampos();
-            })
-            .catch(error => {
-                console.error(error);
-                mostrarAlerta("Error", "Ocurrió un error al eliminar la localidad", "error");
-            });
+                .then(respuesta => respuesta.json())
+                .then(res => {
+                    mostrarAlerta(res.exito ? "Eliminado" : "Error", res.mensaje, res.exito ? "success" : "error");
+                    if (res.exito) limpiarCampos();
+                })
+                .catch(error => {
+                    console.error(error);
+                    mostrarAlerta("Error", "Ocurrió un error al eliminar la localidad", "error");
+                });
         });
     });
 

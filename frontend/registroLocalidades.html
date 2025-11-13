@@ -30,13 +30,7 @@
                         title="Solo letras y números">
                 </div>
 
-                <!-- Ubicación Georeferenciada -->
-                <div class="form-field">
-                    <label for="ubicacion_georeferenciada">Ubicación Georeferenciada (Latitud, Longitud)</label>
-                    <input type="text" id="ubicacion_georeferenciada" name="ubicacion_georeferenciada" required
-                        maxlength="200" pattern="^-?\d{1,2}\.\d+,\s*-?\d{1,3}\.\d+$" placeholder="Ej. 19.4326, -99.1332"
-                        title="Formato: latitud, longitud (Ej. 19.4326, -99.1332)">
-                </div>
+
 
 
                 <!-- Población -->
@@ -74,6 +68,16 @@
                     </select>
                 </div>
 
+                <!-- Ubicación Georeferenciada -->
+                <div class="form-field">
+                    <label for="ubicacion_georeferenciada">Ubicación Georeferenciada (Latitud, Longitud)</label>
+                    <input type="text" id="ubicacion_georeferenciada" name="ubicacion_georeferenciada" required
+                        maxlength="200" pattern="^-?\d{1,2}\.\d+,\s*-?\d{1,3}\.\d+$" placeholder="Ej. 19.4326, -99.1332"
+                        title="Formato: latitud, longitud (Ej. 19.4326, -99.1332)">
+                </div>
+                <!-- Mapa para seleccionar ubicación -->
+                <div id="map" style="height: 400px; margin-top: 20px;"></div>
+
 
                 <div class="form-actions" style="grid-column: 1 / -1; justify-content: center;">
                     <button type="submit">Guardar</button>
@@ -98,6 +102,61 @@
 
     <!-- estados.js -->
     <script src="../js/registrarLocalidad.js"></script>
+
+    <!-- Leaflet.js -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+    <script>
+        // Inicializar el mapa centrado en México
+        const map = L.map('map').setView([23.6345, -102.5528], 5);
+
+        // Capa base de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
+
+        let marker;
+
+        // Al hacer clic en el mapa
+        map.on('click', async function (e) {
+            const lat = e.latlng.lat.toFixed(6);
+            const lng = e.latlng.lng.toFixed(6);
+
+            // Mostrar o mover marcador
+            if (marker) {
+                marker.setLatLng(e.latlng);
+            } else {
+                marker = L.marker(e.latlng).addTo(map);
+            }
+
+            // Actualizar campo de coordenadas
+            document.getElementById('ubicacion_georeferenciada').value = `${lat}, ${lng}`;
+
+            // === Geocodificación inversa (obtener localidad/estado) ===
+            try {
+                const response = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&addressdetails=1`);
+                const data = await response.json();
+
+                if (data && data.address) {
+                    const address = data.address;
+
+                    // Extraer los datos más relevantes
+                    const localidad = address.village || address.town || address.city || address.suburb || '';
+                    const estado = address.state || '';
+
+                    // Rellenar los campos del formulario si existen
+                    if (localidad) document.getElementById('localidad').value = localidad;
+                    if (estado) document.getElementById('estado').value = estado;
+                }
+            } catch (error) {
+                console.error('Error al obtener los datos de ubicación:', error);
+            }
+        });
+    </script>
+
+
 
 
 </body>
